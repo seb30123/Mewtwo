@@ -1,0 +1,29 @@
+FROM python:3.12-slim
+
+LABEL org.opencontainers.image.source="https://github.com/USERNAME/pq-lab"
+LABEL org.opencontainers.image.description="PQ-Lab analysis environment"
+LABEL org.opencontainers.image.licenses="MIT"
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    curl \
+    libhdf5-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+COPY pyproject.toml ./
+COPY common/pqlab ./common/pqlab
+
+RUN pip install --upgrade pip && \
+    pip install -e ".[analysis,notebook,dev]"
+
+EXPOSE 8888
+
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

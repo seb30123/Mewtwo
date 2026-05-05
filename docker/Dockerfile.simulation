@@ -1,0 +1,26 @@
+FROM python:3.12-slim
+
+LABEL org.opencontainers.image.source="https://github.com/USERNAME/pq-lab"
+LABEL org.opencontainers.image.description="PQ-Lab fault simulation environment (QEMU + ARCHIE)"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    qemu-system-arm \
+    qemu-user-static \
+    gcc-arm-none-eabi \
+    git \
+    build-essential \
+    libglib2.0-dev \
+    libpixman-1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+COPY pyproject.toml ./
+COPY common/pqlab ./common/pqlab
+
+RUN pip install --upgrade pip && \
+    pip install -e ".[analysis,notebook]"
+
+CMD ["bash"]

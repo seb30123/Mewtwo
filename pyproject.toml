@@ -1,0 +1,80 @@
+[project]
+name = "pqlab"
+version = "0.1.0"
+description = "Reproducible catalogue of physical attacks on NIST PQC standards"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Sébastien"}
+]
+keywords = ["post-quantum", "side-channel", "fault-injection", "cryptography"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.12",
+    "h5py>=3.10",
+    "pandas>=2.2",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+analysis = [
+    "scikit-learn>=1.4",
+    "lascar>=1.1",
+    "scared>=1.1",
+]
+dl = [
+    "torch>=2.2",
+    "tensorflow>=2.15",
+]
+notebook = [
+    "jupyterlab>=4.0",
+    "papermill>=2.5",
+    "nbconvert>=7.14",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-notebook>=0.10",
+    "black>=24.0",
+    "ruff>=0.3",
+    "nbqa>=1.7",
+    "mypy>=1.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/USERNAME/pq-lab"
+Documentation = "https://USERNAME.github.io/pq-lab"
+Repository = "https://github.com/USERNAME/pq-lab"
+Issues = "https://github.com/USERNAME/pq-lab/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["common/pqlab"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["common/tests"]
+python_files = ["test_*.py"]

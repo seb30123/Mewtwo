@@ -1,0 +1,28 @@
+services:
+  analysis:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.analysis
+    image: pq-lab-analysis:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/workspace
+    environment:
+      - JUPYTER_TOKEN=pqlab
+
+  firmware:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.firmware
+    image: pq-lab-firmware:latest
+    volumes:
+      - ./:/firmware
+
+  simulation:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.simulation
+    image: pq-lab-simulation:latest
+    volumes:
+      - ./:/workspace

@@ -1,0 +1,21 @@
+FROM debian:bookworm-slim
+
+LABEL org.opencontainers.image.source="https://github.com/USERNAME/pq-lab"
+LABEL org.opencontainers.image.description="PQ-Lab firmware build environment (arm-none-eabi)"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc-arm-none-eabi \
+    binutils-arm-none-eabi \
+    libnewlib-arm-none-eabi \
+    make \
+    cmake \
+    git \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /firmware
+
+CMD ["bash"]
