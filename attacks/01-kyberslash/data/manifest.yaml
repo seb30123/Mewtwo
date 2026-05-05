@@ -1,0 +1,54 @@
+attack_id: 01-kyberslash
+capture_id: 2026-05-05_kyberslash_kyber512_pi5_run01
+description: |
+  KyberSlash attack reproduction attempt on Raspberry Pi 5 (Cortex-A76).
+  100,000 Kyber512 decapsulations with uniformly random ciphertexts.
+  Result: NO leakage detected — Cortex-A76 has constant-time integer division.
+
+firmware:
+  algorithm: Kyber512
+  library: liboqs
+  version: "0.9.0"
+  commit: 7c3a0e9aa7f9568e4dcafaf908ff8aa0008f0b71
+  build_flags: "-O2 -march=armv8-a+crypto"
+  toolchain: "gcc 12.2.0"
+  patch_status: vulnerable (pre-patch, December 2023)
+
+target:
+  device: Raspberry Pi 5
+  cpu: ARM Cortex-A76
+  cpu_freq_hz: 2_400_000_000
+  cores_used: all (no pinning)
+  governor: performance
+
+capture:
+  method: PMU via perf_event_open(PERF_COUNT_HW_CPU_CYCLES)
+  resolution_ns: 0.42
+  n_traces: 100_000
+  ciphertext_strategy: uniform_random
+  warmup_iterations: 2_000
+
+environment:
+  os: Raspberry Pi OS 64-bit
+  kernel: 6.12.62-rpi
+  capture_date: 2026-05-05
+  perf_event_paranoid: 0
+
+results:
+  median_cycles: 53_102
+  cv_percent: 2.74
+  max_t_statistic: 2.96
+  leakage_detected: false
+  conclusion: |
+    No timing leakage detected on Cortex-A76, consistent with constant-time
+    integer division on this microarchitecture.
+
+artifacts:
+  traces_csv_gz: raw/attack_100k.csv.gz
+  capture_log: raw/attack_100k.log
+  zenodo_doi: TBD
+
+ethics:
+  disclosure_status: KyberSlash was responsibly disclosed and patched in early 2024.
+  liboqs_version_used: 0.9.0 — pre-patch version, used for historical reproduction.
+  current_versions_safe: liboqs >= 0.10.0, pqm4 (post Feb 2024).
