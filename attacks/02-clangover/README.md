@@ -75,7 +75,3 @@ for opt in O0 O1 O2 O3; do
     | grep -E "udiv|sdiv|umull|lsr"
 done
 ```
-
-## License
-
-Code: MIT. Disassembly artifacts: CC-BY-4.0.
