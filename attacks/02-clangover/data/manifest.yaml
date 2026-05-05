@@ -1,0 +1,57 @@
+attack_id: 02-clangover
+capture_id: 2026-05-06_clangover_optmapping_pi5
+description: |
+  Optimization-level mapping of Clangover on AArch64. We compile vulnerable
+  Kyber source (liboqs 0.9.0 with explicit t/q division) at clang -O0/-O1/-O2/-O3
+  and observe that the variable-time sdiv instruction is only present at -O0.
+
+method: Static analysis (assembly disassembly), 5 build configurations.
+
+targets:
+  vulnerable:
+    library: liboqs
+    version: "0.9.0"
+    note: "Source contains explicit t / KYBER_Q division"
+  patched:
+    library: liboqs
+    version: "0.13.0"
+    note: "Source contains explicit multiply-shift"
+
+compilers_tested:
+  - { name: gcc,   version: "12.2.0", flags: "-O2" }
+  - { name: clang, version: "14.0.6", flags: "-O0" }
+  - { name: clang, version: "14.0.6", flags: "-O1" }
+  - { name: clang, version: "14.0.6", flags: "-O2" }
+  - { name: clang, version: "14.0.6", flags: "-O3" }
+
+cpu:
+  device: Raspberry Pi 5
+  arch: AArch64
+  core: Cortex-A76
+
+results:
+  optimization_threshold: |
+    Clangover manifests only at clang -O0. From -O1 onwards, division-by-
+    constant strength reduction eliminates the variable-time instruction.
+  o0_instruction: "sdiv w8, w8, w9 (variable-time on M4, constant-time on A76)"
+  o1_plus_instruction: "umull + lsr + add (constant-time multiply-shift)"
+  o3_instruction: "shifts only (most aggressive optimization)"
+  conclusion: |
+    Production AArch64 binaries (always -O2+) are not affected by Clangover
+    in poly_compress. The combination of compiler optimization and Cortex-A76
+    constant-time divider provides defense in depth.
+
+artifacts:
+  disassembly:
+    - disasm/liboqs-0.9.0_clang-O0_poly_compress.asm
+    - disasm/liboqs-0.9.0_clang-O1_poly_compress.asm
+    - disasm/liboqs-0.9.0_clang-O2_poly_compress.asm
+    - disasm/liboqs-0.9.0_clang-O3_poly_compress.asm
+    - disasm/liboqs-0.9.0_gcc-O2_poly_compress.asm
+    - disasm/liboqs-0.13.0_clang-O3_poly_compress.asm
+    - disasm/liboqs-0.13.0_gcc-O2_poly_compress.asm
+
+ethics:
+  disclosure_status: |
+    Clangover has been responsibly disclosed (May 2024). This work confirms
+    the attack does not manifest at production-level optimization on AArch64.
