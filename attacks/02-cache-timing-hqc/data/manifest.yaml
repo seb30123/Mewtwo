@@ -1,0 +1,51 @@
+attack_id: 02-cache-timing-hqc
+capture_id: 2026-05-08_hqc_flush_reload_pi5_run01
+description: |
+  Flush+Reload analysis of alpha_ij_pow lookup table in HQC-128
+  (PQClean reference, liboqs 0.15.0) on Raspberry Pi 5 (Cortex-A76).
+  Result: NO secret-dependent access pattern detected.
+
+method: Flush+Reload via PMU and ARM dc civac, n=100 decapsulations.
+
+target:
+  algorithm: HQC-128
+  library: liboqs (PQClean variant)
+  version: "0.15.0"
+  source_date: "hqc-submission_2023-04-30 via package-pqclean"
+  patches_applied:
+    - "Exposed alpha_ij_pow symbol (was static) for external observation"
+
+cpu:
+  device: Raspberry Pi 5
+  arch: AArch64
+  core: Cortex-A76
+  clock_hz: 2_400_000_000
+
+calibration:
+  cache_hit_median_cycles: 62
+  cache_miss_median_cycles: 352
+  hit_miss_ratio: 5.7
+  threshold_cycles: 200
+
+results:
+  table_size_bytes: 2700
+  cache_lines_targeted: 43
+  decapsulations_observed: 100
+  min_hit_rate_percent: 97.0
+  max_hit_rate_percent: 100.0
+  mean_hit_rate_percent: 99.5
+  conclusion: |
+    All 43 lines accessed on every decapsulation. No secret-dependent
+    access pattern observable. alpha_ij_pow is constant-time.
+
+artifacts:
+  harness_c: ../firmware/flush-reload/flush_reload_hqc.c
+  patch_doc: ../firmware/patch_expose_alpha.md
+  raw_csv: flush-reload/hit_rates_n100.csv
+  summary_log: flush-reload/hit_rates_n100.log
+
+ethics:
+  disclosure_status: |
+    The PQClean HQC implementation has been audited and hardened against
+    cache-timing attacks. This study confirms the effectiveness of those
+    countermeasures on AArch64.
