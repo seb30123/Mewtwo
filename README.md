@@ -1,6 +1,7 @@
 # Mewtwo
 
 > Reproducible catalogue of side-channel and fault injection attacks on NIST post-quantum cryptography standards.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
@@ -29,12 +30,6 @@ cd Mewtwo
 docker compose up analysis
 ```
 
-## License
+## Licence
 
-- Code: [MIT](LICENSE)
-- Datasets: [CC-BY-4.0](LICENSE-DATA)
-- Documentation: [CC-BY-SA-4.0](docs/LICENSE-DOCS)
-
-## Citation
-
-See [`CITATION.cff`](CITATION.cff).
+- **Code** (C, Python, scripts, Docker): [MIT License](LICENCE)
