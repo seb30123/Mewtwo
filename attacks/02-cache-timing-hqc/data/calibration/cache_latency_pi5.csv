@@ -1,0 +1,3 @@
+category,n,min,p10,p50,p90,max,unit
+hit,10000,62,62,62,62,304,cycles
+miss,10000,293,348,352,355,487,cycles
