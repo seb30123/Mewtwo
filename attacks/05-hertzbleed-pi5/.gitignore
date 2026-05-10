@@ -1,0 +1,7 @@
+firmware/poc/hertzbleed_poc
+*.o
+__pycache__/
+*.pyc
+.venv/
+*.swp
+.DS_Store

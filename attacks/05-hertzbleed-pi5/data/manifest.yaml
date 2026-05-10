@@ -1,0 +1,70 @@
+attack_id: 05-hertzbleed-pi5
+phase: sanity-check
+status: negative
+description: |
+  Sanity check whether Hertzbleed-style DVFS frequency leakage (Wang et al.
+  USENIX 2022, Yu et al. ePrint 2024/070) is observable on Raspberry Pi 5.
+  Result: NO. Pi 5 DVFS is bimodal (1500 MHz idle, 2400 MHz under load) and
+  remains stable at 2400 MHz throughout sustained load below 80°C, eliminating
+  the observation window required for Hertzbleed-style attacks.
+
+method: |
+  Three complementary measurements:
+  1. PoC harness with two Hamming weight operand patterns (HW=0 vs HW=64),
+     200ms tight loop per group, scaling_cur_freq sampling every ~5ms.
+  2. Idle vs single-core load comparison (50 samples each over 5s).
+  3. Quad-core stress test for 30s with thermal and frequency monitoring.
+
+target:
+  device: Raspberry Pi 5 Model B Rev 1.0
+  arch: AArch64
+  core: Cortex-A76
+  soc: BCM2712
+  cooling: passive heatsink (default)
+  governor_under_test: ondemand
+  available_pstates_mhz: [1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400]
+
+results:
+  poc_runs: 3
+  samples_per_group: 120
+  zeros_group_observed_freqs:
+    "2400000": 120
+  ones_group_observed_freqs:
+    "2400000": 120
+  variance_between_groups: 0
+  idle_freq_kHz: 1500000
+  load_freq_kHz: 2400000
+  stress_duration_seconds: 30
+  stress_temp_start_celsius: 35.6
+  stress_temp_end_celsius: 51.0
+  stress_throttled_state: "0x0"
+
+artifacts:
+  poc_source: firmware/poc/hertzbleed_poc.c
+  poc_runs:
+    - firmware/poc/poc_run1.csv
+    - firmware/poc/poc_run2.csv
+    - firmware/poc/poc_run3.csv
+  observations: firmware/poc/dvfs_observation.txt
+  stress_log: firmware/poc/stress_log.csv
+
+interpretation: |
+  The Pi 5's DVFS subsystem operates in a binary regime: idle (1500 MHz) or
+  full load (2400 MHz). The thermal envelope (80°C threshold) was never
+  approached, so no DVFS oscillation regime exists for an attacker to observe.
+  This contrasts with Intel/AMD x86 where boost states constantly oscillate
+  near thermal limits, providing the window Hertzbleed exploits.
+
+cross_references:
+  related_attacks:
+    - "01-kyberslash-clangover (timing channel)"
+    - "04-ravi-pc-oracle-kyber (FO branch timing)"
+  papers:
+    - "Wang et al. USENIX Security 2022 (Hertzbleed original)"
+    - "Yu et al. IACR ePrint 2024/070 (Hints from Hertz on NTT)"
+
+ethics:
+  disclosure_status: |
+    Hertzbleed and follow-up Hints-from-Hertz are publicly documented attacks.
+    This study tests platform applicability and reports a defensive finding:
+    Pi 5 thermal design provides natural immunity in default configuration.

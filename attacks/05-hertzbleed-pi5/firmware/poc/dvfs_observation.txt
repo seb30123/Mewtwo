@@ -1,0 +1,12 @@
+# DVFS observation — Pi 5 Cortex-A76
+# Date: 2026-05-10T22:15:33+02:00
+# Goal: characterize DVFS responsiveness vs CPU load
+
+## Idle 5 seconds (no load)
+       50 1500000
+
+## Under load 5 seconds (single core 'yes' on core 3)
+       50 2400000
+
+## Temperature after test
+  temp=43.3'C
