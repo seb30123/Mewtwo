@@ -150,16 +150,3 @@ attack-04-ravi-pc-oracle-kyber/
 │       ├── timing.csv                     ← v1 raw data (n=2000)
 │       └── timing_v2.csv                  ← v2 raw data (n=20000)
 
-## TODO if someone wants to push further
-
-1. Re-run v2 on Kyber768 and Kyber1024 (just change `OQS_KEM_alg_*`)
-2. Re-run v2 with clang-14 -O3 instead of gcc-12 -O2
-3. Implement Option A : patch `cmov` with PMU instrumentation around
-   the inner loop, measure the cycles spent inside `cmov` only
-4. Implement Option B : Flush+Reload on the cache line covering
-   offsets 0x60-0x84 of the `cmov` symbol
-5. Cross-CPU comparison : same harness on a Cortex-A53 (older Raspberry
-   Pi) — would expose any A76-specific protections
-
-Each of these is roughly 2-4 hours of additional work given the existing
-artifacts.
