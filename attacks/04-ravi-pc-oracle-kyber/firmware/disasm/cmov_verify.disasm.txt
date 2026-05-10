@@ -1,0 +1,261 @@
+# Désassemblage de cmov dans liboqs 0.15.0 / kyber512_ref / gcc 12.2.0 -O2
+# Source : /home/sebbrg/liboqs/build/src/kem/kyber/CMakeFiles/kyber_512_ref.dir/pqcrystals-kyber_kyber512_ref/verify.c.o
+# Date   : 2026-05-10T17:43:52+02:00
+
+--- Tailles des fonctions ---
+0000000000000000 00000000000001cc T pqcrystals_kyber512_ref_cmov
+0000000000000000 0000000000000024 T pqcrystals_kyber512_ref_cmov_int16
+0000000000000000 00000000000001c0 T pqcrystals_kyber512_ref_verify
+
+--- Désassemblage de cmov ---
+
+/home/sebbrg/liboqs/build/src/kem/kyber/CMakeFiles/kyber_512_ref.dir/pqcrystals-kyber_kyber512_ref/verify.c.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text.pqcrystals_kyber512_ref_verify:
+
+Disassembly of section .text.pqcrystals_kyber512_ref_cmov:
+
+0000000000000000 <pqcrystals_kyber512_ref_cmov>:
+   0:	4b0303e3 	neg	w3, w3
+   4:	12001c66 	and	w6, w3, #0xff
+   8:	b4000262 	cbz	x2, 54 <pqcrystals_kyber512_ref_cmov+0x54>
+   c:	d1000445 	sub	x5, x2, #0x1
+  10:	f10018bf 	cmp	x5, #0x6
+  14:	54000d29 	b.ls	1b8 <pqcrystals_kyber512_ref_cmov+0x1b8>  // b.plast
+  18:	91000424 	add	x4, x1, #0x1
+  1c:	d2800003 	mov	x3, #0x0                   	// #0
+  20:	cb040004 	sub	x4, x0, x4
+  24:	f100389f 	cmp	x4, #0xe
+  28:	54000188 	b.hi	58 <pqcrystals_kyber512_ref_cmov+0x58>  // b.pmore
+  2c:	d503201f 	nop
+  30:	38636805 	ldrb	w5, [x0, x3]
+  34:	38636824 	ldrb	w4, [x1, x3]
+  38:	4a0400a4 	eor	w4, w5, w4
+  3c:	0a0400c4 	and	w4, w6, w4
+  40:	4a0400a5 	eor	w5, w5, w4
+  44:	38236805 	strb	w5, [x0, x3]
+  48:	91000463 	add	x3, x3, #0x1
+  4c:	eb03005f 	cmp	x2, x3
+  50:	54ffff01 	b.ne	30 <pqcrystals_kyber512_ref_cmov+0x30>  // b.any
+  54:	d65f03c0 	ret
+  58:	f10038bf 	cmp	x5, #0xe
+  5c:	54000b29 	b.ls	1c0 <pqcrystals_kyber512_ref_cmov+0x1c0>  // b.plast
+  60:	4e010cc2 	dup	v2.16b, w6
+  64:	927cec44 	and	x4, x2, #0xfffffffffffffff0
+  68:	3ce36800 	ldr	q0, [x0, x3]
+  6c:	3ce36821 	ldr	q1, [x1, x3]
+  70:	6ea21c20 	bit	v0.16b, v1.16b, v2.16b
+  74:	3ca36800 	str	q0, [x0, x3]
+  78:	91004063 	add	x3, x3, #0x10
+  7c:	eb03009f 	cmp	x4, x3
+  80:	54ffff41 	b.ne	68 <pqcrystals_kyber512_ref_cmov+0x68>  // b.any
+  84:	927cec43 	and	x3, x2, #0xfffffffffffffff0
+  88:	f2400c5f 	tst	x2, #0xf
+  8c:	54fffe40 	b.eq	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.none
+  90:	cb030044 	sub	x4, x2, x3
+  94:	d1000485 	sub	x5, x4, #0x1
+  98:	f10018bf 	cmp	x5, #0x6
+  9c:	54000149 	b.ls	c4 <pqcrystals_kyber512_ref_cmov+0xc4>  // b.plast
+  a0:	0e010cc0 	dup	v0.8b, w6
+  a4:	fc636801 	ldr	d1, [x0, x3]
+  a8:	fc636822 	ldr	d2, [x1, x3]
+  ac:	927df085 	and	x5, x4, #0xfffffffffffffff8
+  b0:	2e611c40 	bsl	v0.8b, v2.8b, v1.8b
+  b4:	fc236800 	str	d0, [x0, x3]
+  b8:	8b050063 	add	x3, x3, x5
+  bc:	f240089f 	tst	x4, #0x7
+  c0:	54fffca0 	b.eq	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.none
+  c4:	38636805 	ldrb	w5, [x0, x3]
+  c8:	91000467 	add	x7, x3, #0x1
+  cc:	38636824 	ldrb	w4, [x1, x3]
+  d0:	4a0400a4 	eor	w4, w5, w4
+  d4:	0a0400c4 	and	w4, w6, w4
+  d8:	4a0400a5 	eor	w5, w5, w4
+  dc:	38236805 	strb	w5, [x0, x3]
+  e0:	eb07005f 	cmp	x2, x7
+  e4:	54fffb89 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+  e8:	38676805 	ldrb	w5, [x0, x7]
+  ec:	91000868 	add	x8, x3, #0x2
+  f0:	38676824 	ldrb	w4, [x1, x7]
+  f4:	4a0400a4 	eor	w4, w5, w4
+  f8:	0a0400c4 	and	w4, w6, w4
+  fc:	4a0400a5 	eor	w5, w5, w4
+ 100:	38276805 	strb	w5, [x0, x7]
+ 104:	eb08005f 	cmp	x2, x8
+ 108:	54fffa69 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+ 10c:	38686805 	ldrb	w5, [x0, x8]
+ 110:	91000c67 	add	x7, x3, #0x3
+ 114:	38686824 	ldrb	w4, [x1, x8]
+ 118:	4a0400a4 	eor	w4, w5, w4
+ 11c:	0a0400c4 	and	w4, w6, w4
+ 120:	4a0400a5 	eor	w5, w5, w4
+ 124:	38286805 	strb	w5, [x0, x8]
+ 128:	eb07005f 	cmp	x2, x7
+ 12c:	54fff949 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+ 130:	38676805 	ldrb	w5, [x0, x7]
+ 134:	91001068 	add	x8, x3, #0x4
+ 138:	38676824 	ldrb	w4, [x1, x7]
+ 13c:	4a0400a4 	eor	w4, w5, w4
+ 140:	0a0400c4 	and	w4, w6, w4
+ 144:	4a0400a5 	eor	w5, w5, w4
+ 148:	38276805 	strb	w5, [x0, x7]
+ 14c:	eb08005f 	cmp	x2, x8
+ 150:	54fff829 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+ 154:	38686805 	ldrb	w5, [x0, x8]
+ 158:	91001467 	add	x7, x3, #0x5
+ 15c:	38686824 	ldrb	w4, [x1, x8]
+ 160:	4a0400a4 	eor	w4, w5, w4
+ 164:	0a0400c4 	and	w4, w6, w4
+ 168:	4a0400a5 	eor	w5, w5, w4
+ 16c:	38286805 	strb	w5, [x0, x8]
+ 170:	eb07005f 	cmp	x2, x7
+ 174:	54fff709 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+ 178:	38676805 	ldrb	w5, [x0, x7]
+ 17c:	91001863 	add	x3, x3, #0x6
+ 180:	38676824 	ldrb	w4, [x1, x7]
+ 184:	4a0400a4 	eor	w4, w5, w4
+ 188:	0a0400c4 	and	w4, w6, w4
+ 18c:	4a0400a5 	eor	w5, w5, w4
+ 190:	38276805 	strb	w5, [x0, x7]
+ 194:	eb03005f 	cmp	x2, x3
+ 198:	54fff5e9 	b.ls	54 <pqcrystals_kyber512_ref_cmov+0x54>  // b.plast
+ 19c:	38636802 	ldrb	w2, [x0, x3]
+ 1a0:	38636821 	ldrb	w1, [x1, x3]
+ 1a4:	4a010041 	eor	w1, w2, w1
+ 1a8:	0a0100c1 	and	w1, w6, w1
+ 1ac:	4a010042 	eor	w2, w2, w1
+ 1b0:	38236802 	strb	w2, [x0, x3]
+ 1b4:	d65f03c0 	ret
+ 1b8:	d2800003 	mov	x3, #0x0                   	// #0
+ 1bc:	17ffff9d 	b	30 <pqcrystals_kyber512_ref_cmov+0x30>
+ 1c0:	aa0203e4 	mov	x4, x2
+ 1c4:	d2800003 	mov	x3, #0x0                   	// #0
+ 1c8:	17ffffb6 	b	a0 <pqcrystals_kyber512_ref_cmov+0xa0>
+
+Disassembly of section .text.pqcrystals_kyber512_ref_cmov_int16:
+
+--- Désassemblage de verify ---
+
+/home/sebbrg/liboqs/build/src/kem/kyber/CMakeFiles/kyber_512_ref.dir/pqcrystals-kyber_kyber512_ref/verify.c.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text.pqcrystals_kyber512_ref_verify:
+
+0000000000000000 <pqcrystals_kyber512_ref_verify>:
+   0:	b4000d42 	cbz	x2, 1a8 <pqcrystals_kyber512_ref_verify+0x1a8>
+   4:	d1000443 	sub	x3, x2, #0x1
+   8:	f100387f 	cmp	x3, #0xe
+   c:	54000d29 	b.ls	1b0 <pqcrystals_kyber512_ref_verify+0x1b0>  // b.plast
+  10:	4f000401 	movi	v1.4s, #0x0
+  14:	927cec44 	and	x4, x2, #0xfffffffffffffff0
+  18:	d2800003 	mov	x3, #0x0                   	// #0
+  1c:	d503201f 	nop
+  20:	3ce36800 	ldr	q0, [x0, x3]
+  24:	3ce36822 	ldr	q2, [x1, x3]
+  28:	91004063 	add	x3, x3, #0x10
+  2c:	6e221c00 	eor	v0.16b, v0.16b, v2.16b
+  30:	4ea01c21 	orr	v1.16b, v1.16b, v0.16b
+  34:	eb03009f 	cmp	x4, x3
+  38:	54ffff41 	b.ne	20 <pqcrystals_kyber512_ref_verify+0x20>  // b.any
+  3c:	4f000400 	movi	v0.4s, #0x0
+  40:	927cec44 	and	x4, x2, #0xfffffffffffffff0
+  44:	5e180423 	mov	d3, v1.d[1]
+  48:	6e004022 	ext	v2.16b, v1.16b, v0.16b, #8
+  4c:	0ea31c23 	orr	v3.8b, v1.8b, v3.8b
+  50:	4ea11c41 	orr	v1.16b, v2.16b, v1.16b
+  54:	6e002022 	ext	v2.16b, v1.16b, v0.16b, #4
+  58:	4ea11c42 	orr	v2.16b, v2.16b, v1.16b
+  5c:	6e001041 	ext	v1.16b, v2.16b, v0.16b, #2
+  60:	4ea21c21 	orr	v1.16b, v1.16b, v2.16b
+  64:	6e000820 	ext	v0.16b, v1.16b, v0.16b, #1
+  68:	4ea11c00 	orr	v0.16b, v0.16b, v1.16b
+  6c:	0e013c03 	umov	w3, v0.b[0]
+  70:	f2400c5f 	tst	x2, #0xf
+  74:	54000920 	b.eq	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.none
+  78:	cb040045 	sub	x5, x2, x4
+  7c:	d10004a6 	sub	x6, x5, #0x1
+  80:	f10018df 	cmp	x6, #0x6
+  84:	54000209 	b.ls	c4 <pqcrystals_kyber512_ref_verify+0xc4>  // b.plast
+  88:	fc646821 	ldr	d1, [x1, x4]
+  8c:	927df0a3 	and	x3, x5, #0xfffffffffffffff8
+  90:	fc646800 	ldr	d0, [x0, x4]
+  94:	8b030084 	add	x4, x4, x3
+  98:	2e211c00 	eor	v0.8b, v0.8b, v1.8b
+  9c:	0ea31c00 	orr	v0.8b, v0.8b, v3.8b
+  a0:	7f600401 	ushr	d1, d0, #32
+  a4:	0ea01c21 	orr	v1.8b, v1.8b, v0.8b
+  a8:	7f700420 	ushr	d0, d1, #16
+  ac:	0ea11c00 	orr	v0.8b, v0.8b, v1.8b
+  b0:	7f780401 	ushr	d1, d0, #8
+  b4:	0ea01c20 	orr	v0.8b, v1.8b, v0.8b
+  b8:	0e013c03 	umov	w3, v0.b[0]
+  bc:	f24008bf 	tst	x5, #0x7
+  c0:	540006c0 	b.eq	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.none
+  c4:	38646805 	ldrb	w5, [x0, x4]
+  c8:	91000486 	add	x6, x4, #0x1
+  cc:	38646827 	ldrb	w7, [x1, x4]
+  d0:	4a0700a5 	eor	w5, w5, w7
+  d4:	2a050063 	orr	w3, w3, w5
+  d8:	12001c63 	and	w3, w3, #0xff
+  dc:	eb06005f 	cmp	x2, x6
+  e0:	540005c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+  e4:	38666825 	ldrb	w5, [x1, x6]
+  e8:	91000887 	add	x7, x4, #0x2
+  ec:	38666806 	ldrb	w6, [x0, x6]
+  f0:	4a0600a5 	eor	w5, w5, w6
+  f4:	2a050063 	orr	w3, w3, w5
+  f8:	12001c63 	and	w3, w3, #0xff
+  fc:	eb07005f 	cmp	x2, x7
+ 100:	540004c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+ 104:	38676805 	ldrb	w5, [x0, x7]
+ 108:	91000c86 	add	x6, x4, #0x3
+ 10c:	38676827 	ldrb	w7, [x1, x7]
+ 110:	4a0700a5 	eor	w5, w5, w7
+ 114:	2a050063 	orr	w3, w3, w5
+ 118:	12001c63 	and	w3, w3, #0xff
+ 11c:	eb06005f 	cmp	x2, x6
+ 120:	540003c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+ 124:	38666805 	ldrb	w5, [x0, x6]
+ 128:	91001087 	add	x7, x4, #0x4
+ 12c:	38666826 	ldrb	w6, [x1, x6]
+ 130:	4a0600a5 	eor	w5, w5, w6
+ 134:	2a050063 	orr	w3, w3, w5
+ 138:	12001c63 	and	w3, w3, #0xff
+ 13c:	eb07005f 	cmp	x2, x7
+ 140:	540002c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+ 144:	38676805 	ldrb	w5, [x0, x7]
+ 148:	91001486 	add	x6, x4, #0x5
+ 14c:	38676827 	ldrb	w7, [x1, x7]
+ 150:	4a0700a5 	eor	w5, w5, w7
+ 154:	2a050063 	orr	w3, w3, w5
+ 158:	12001c63 	and	w3, w3, #0xff
+ 15c:	eb06005f 	cmp	x2, x6
+ 160:	540001c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+ 164:	38666805 	ldrb	w5, [x0, x6]
+ 168:	91001884 	add	x4, x4, #0x6
+ 16c:	38666826 	ldrb	w6, [x1, x6]
+ 170:	4a0600a5 	eor	w5, w5, w6
+ 174:	2a050063 	orr	w3, w3, w5
+ 178:	12001c63 	and	w3, w3, #0xff
+ 17c:	eb04005f 	cmp	x2, x4
+ 180:	540000c9 	b.ls	198 <pqcrystals_kyber512_ref_verify+0x198>  // b.plast
+ 184:	38646800 	ldrb	w0, [x0, x4]
+ 188:	38646821 	ldrb	w1, [x1, x4]
+ 18c:	4a010000 	eor	w0, w0, w1
+ 190:	2a000060 	orr	w0, w3, w0
+ 194:	12001c03 	and	w3, w0, #0xff
+ 198:	2a0303e0 	mov	w0, w3
+ 19c:	cb0003e0 	neg	x0, x0
+ 1a0:	d37ffc00 	lsr	x0, x0, #63
+ 1a4:	d65f03c0 	ret
+ 1a8:	52800000 	mov	w0, #0x0                   	// #0
+ 1ac:	d65f03c0 	ret
+ 1b0:	0f000403 	movi	v3.2s, #0x0
+ 1b4:	52800003 	mov	w3, #0x0                   	// #0
+ 1b8:	d2800004 	mov	x4, #0x0                   	// #0
+ 1bc:	17ffffaf 	b	78 <pqcrystals_kyber512_ref_verify+0x78>
+
+Disassembly of section .text.pqcrystals_kyber512_ref_cmov:
+
+Disassembly of section .text.pqcrystals_kyber512_ref_cmov_int16:

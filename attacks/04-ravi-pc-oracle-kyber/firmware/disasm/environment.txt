@@ -1,0 +1,23 @@
+# Environnement de la session
+
+## Hardware
+temp=55.4'C
+Revision	: d04170
+Model		: Raspberry Pi 5 Model B Rev 1.0
+
+## CPU governor / freq
+performance
+2400000
+
+## Kernel
+Linux sebbrg 6.12.75+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.75-1+rpt1~bookworm (2026-03-11) aarch64 GNU/Linux
+
+## Compilers
+gcc (Debian 12.2.0-14+deb12u1) 12.2.0
+
+## liboqs
+0.15.0
+/home/sebbrg/Mewtwo/attacks/04-ravi-pc-oracle-kyber
+
+## perf_event_paranoid
+0

@@ -1,0 +1,6 @@
+# v2: randomized order, N=10000 per group
+# Generating 10000 valid + 10000 invalid ciphertexts...
+# Temperature start : 56.2 C
+# Capturing 20000 randomized decapsulations...
+# Temperature end   : 56.2 C (delta +0.0 C)
+# Done.

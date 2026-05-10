@@ -1,0 +1,125 @@
+attack_id: 04-ravi-pc-oracle-kyber
+phase: sanity-check
+status: negative
+description: |
+  Sanity check phase for the Ravi et al. PC oracle attack against
+  Kyber512. Goal: determine whether a plaintext-checking oracle is
+  observable at the global timing level on Cortex-A76.
+  Result: NO. Welch t-statistic = -1.17 over 20 000 measurements with
+  randomized order — well below the TVLA threshold of 4.5.
+
+method: |
+  Welch t-test on cycle counts of OQS_KEM_decaps measured via
+  perf_event_open (PMU CPU_CYCLES). Two ciphertext groups of 10 000
+  each: valid (OQS_KEM_encaps-derived) and invalid (uniform random,
+  cryptographic seed). Fisher-Yates randomized presentation order.
+  Outlier trimming at 0.5%-99.5% percentile. Quartile breakdown to
+  detect temporal drift.
+
+target:
+  algorithm: ML-KEM-512 (Kyber512)
+  library: liboqs
+  version: "0.15.0"
+  commit: 97f6b86b
+  implementation: pqcrystals-kyber_kyber512_ref
+  countermeasures_present:
+    - "Anti-Clangover __asm__ opacity barrier in cmov() (verify.c:46)"
+    - "verify() returns boolean via constant-time XOR-OR-shift"
+    - "cmov() loop is constant-flow (no branch on b)"
+
+cpu:
+  device: Raspberry Pi 5 Model B Rev 1.0
+  arch: AArch64
+  core: Cortex-A76
+  clock_hz: 2_400_000_000
+  governor: performance
+  affinity: core 3 (sched_setaffinity)
+  perf_event_paranoid: 0
+
+compiler:
+  cc: gcc
+  version: "12.2.0 (Debian 12.2.0-14+deb12u1)"
+  cflags: "-O2 -Wall -std=c11"
+
+kernel:
+  release: "6.12.75+rpt-rpi-2712"
+  build: "1:6.12.75-1+rpt1~bookworm"
+
+runs:
+  v1_alternating:
+    timestamp: "2026-05-10T17:35:00+02:00"
+    n_per_group: 1000
+    order: strict-alternation
+    warmup_iter: 100
+    welch_t: 3.476
+    p_value: 0.0005202
+    diff_cycles: 41.87
+    diff_pct: 0.065
+    verdict: marginal
+    note: "False positive — alternation interacts with branch predictor."
+  v2_randomized:
+    timestamp: "2026-05-10T17:40:00+02:00"
+    n_per_group: 10000
+    order: fisher-yates-randomized
+    warmup_iter: 200
+    welch_t: -1.166
+    p_value: 0.2436
+    diff_cycles: -7.87
+    diff_pct: -0.013
+    verdict: no-oracle
+    quartile_t_values: [-1.18, +0.84, -1.24, -0.71]
+    quartile_signs_consistent: false
+    temperature_start_celsius: 56.2
+    temperature_end_celsius: 56.2
+    temperature_drift_celsius: 0.0
+    note: "Confirmed negative result. v1 signal was an artifact."
+
+decision_thresholds:
+  oracle_robust:    "abs(t) > 4.5 AND quartile signs all match"
+  oracle_marginal:  "abs(t) > 3.0 AND quartile signs all match"
+  no_oracle:        "abs(t) < 3.0 OR quartile signs inconsistent"
+
+artifacts:
+  source:
+    - firmware/source-snippets/crypto_kem_dec.snippet.c
+    - firmware/source-snippets/verify.c.snapshot
+  evidence:
+    - firmware/disasm/cmov_verify.disasm.txt
+    - firmware/disasm/environment.txt
+  harness:
+    - firmware/timing-sanity/timing_sanity.c
+    - firmware/timing-sanity/timing_sanity_v2.c
+  analysis:
+    - firmware/timing-sanity/analyze_timing.py
+    - firmware/timing-sanity/analyze_timing_v2.py
+  raw_data:
+    - firmware/timing-sanity/timing.csv
+    - firmware/timing-sanity/timing.log
+    - firmware/timing-sanity/timing_v2.csv
+    - firmware/timing-sanity/timing_v2.log
+
+cross_references:
+  related_attacks:
+    - "01-kyberslash-clangover (same target, different leak channel)"
+    - "02-cache-timing-hqc (same Flush+Reload methodology)"
+  papers:
+    - "Ravi et al., TCHES 2020(3):307-335, DOI 10.13154/tches.v2020.i3.307-335"
+    - "Goodwill et al., TVLA methodology, NIAT 2011"
+
+next_steps:
+  recommended: "Move to attack 05 (Pessl-Prokop fault FO via QEMU)"
+  alternatives:
+    - "Re-run v2 on Kyber768 and Kyber1024"
+    - "Re-run v2 with clang-14 -O3"
+    - "Implement Option A: PMU-instrumented cmov measurement"
+    - "Implement Option B: Flush+Reload on cmov code line 0x40-0x7F"
+  see: lab_notes.md "TODO if someone wants to push further"
+
+ethics:
+  disclosure_status: |
+    The Ravi PC-oracle attack family is publicly documented since 2020.
+    Liboqs 0.15.0 has been hardened against trivial timing leaks
+    including the explicit anti-Clangover barrier in cmov().
+    This study confirms the effectiveness of those countermeasures
+    on AArch64 / Cortex-A76 / gcc 12.2.0 -O2 at the timing-channel level.
+    No new vulnerability is disclosed.

@@ -1,0 +1,13 @@
+# Compiled binaries
+firmware/timing-sanity/timing_sanity
+firmware/timing-sanity/timing_sanity_v2
+*.o
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor swap files
+*.swp
+.DS_Store

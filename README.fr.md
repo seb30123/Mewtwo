@@ -18,3 +18,25 @@ Pour chaque attaque, Mewtwo fournit :
 ## Statut
 
 🚧 **En cours de développement** — projet de science ouverte en phase initiale.
+
+## Catalogue des attaques
+
+| # | Attaque | Cible | Méthode | Statut | Dossier |
+|---|---------|-------|---------|--------|---------|
+| 01 | KyberSlash + Clangover | Kyber/ML-KEM | Timing PMU + analyse statique 13 configs | ❌ Pas de fuite | [attacks/01-kyberslash-clangover/](attacks/01-kyberslash-clangover/) |
+| 02 | Cache-timing HQC | HQC-128 (PQClean) | Flush+Reload sur `alpha_ij_pow` | ❌ Pas de fuite | [attacks/02-cache-timing-hqc/](attacks/02-cache-timing-hqc/) |
+| 03 | _(réservé)_ | – | – | ⏳ Planifié | – |
+| 04 | Ravi PC oracle (sanity check) | Kyber512 branche FO | t-test de Welch sur timing decap, n=20 000 randomisé | ❌ Pas d'oracle au timing | [attacks/04-ravi-pc-oracle-kyber/](attacks/04-ravi-pc-oracle-kyber/) |
+| 05 | Pessl-Prokop fault FO | Kyber/Dilithium | Injection de fautes via QEMU | ⏳ Planifié | – |
+| 06 | FALCON Down | FN-DSA / Falcon | Ré-analyse de dataset public | ⏳ Planifié | – |
+| 07 | Dilithium DEMA | ML-DSA | Analyse de puissance (corrélation) | ⏳ Planifié | – |
+| 08 | SPHINCS+ DPA | SLH-DSA | Analyse de puissance (différentielle) | ⏳ Planifié | – |
+| 09 | SCA profilée par deep-learning | ML-KEM/ML-DSA | Template + réseau de neurones | ⏳ Planifié | – |
+| 10 | Fuite timing NTT | NTT Kyber/Dilithium | Timing PMU sur NTT | ⏳ Planifié | – |
+
+**Légende** : ❌ négatif (non exploitable sur cette cible) · 🔬 en cours · ⏳ planifié · ✅ positif (fuite reproduite)
+
+> Chaque résultat négatif est documenté avec autant de soin qu'un résultat
+> positif — démontrer qu'une attaque ne fonctionne pas dans certaines
+> conditions est en soi une contribution scientifique.
+
