@@ -1,0 +1,14 @@
+# Heavy data files (regenerable from dataset)
+data/*.npy
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local dataset (downloaded separately from Zenodo, 3.4 GB)
+# Stored in ~/datasets/, not in repo
+
+# Editor
+*.swp
+.DS_Store

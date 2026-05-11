@@ -28,7 +28,7 @@ Pour chaque attaque, Mewtwo fournit :
 | 03 | _(réservé)_ | – | – | ⏳ Planifié | – |
 | 04 | Ravi PC oracle (sanity check) | Kyber512 branche FO | t-test de Welch sur timing decap, n=20 000 randomisé | ❌ Pas d'oracle au timing | [attacks/04-ravi-pc-oracle-kyber/](attacks/04-ravi-pc-oracle-kyber/) |
 | 05 | Pessl-Prokop fault FO | Kyber/Dilithium | Injection de fautes via QEMU | ⏳ Planifié | – |
-| 06 | FALCON Down | FN-DSA / Falcon | Ré-analyse de dataset public | ⏳ Planifié | – |
+| 06 | **CPA sur ML-KEM pair-pointwise** | ML-KEM-768 (PQClean ref) | CPA sur sortie Montgomery `fqmul` | ✅ **Récupération clé avec 12 traces** | [attacks/06-mlkem-cpa-pairpointwise/](attacks/06-mlkem-cpa-pairpointwise/) |
 | 07 | Dilithium DEMA | ML-DSA | Analyse de puissance (corrélation) | ⏳ Planifié | – |
 | 08 | SPHINCS+ DPA | SLH-DSA | Analyse de puissance (différentielle) | ⏳ Planifié | – |
 | 09 | SCA profilée par deep-learning | ML-KEM/ML-DSA | Template + réseau de neurones | ⏳ Planifié | – |

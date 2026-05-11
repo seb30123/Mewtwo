@@ -1,0 +1,137 @@
+attack_id: 06-mlkem-cpa-pairpointwise
+phase: full-attack
+status: success
+description: |
+  First public reproduction of the Nkotto 2025/1577 CPA attack on
+  ML-KEM-768 pair-pointwise multiplication, using the Rezaeezade
+  2025/811 public dataset. Demonstrates full secret-key coefficient
+  recovery from only 12 power traces — three orders of magnitude
+  fewer than the 10 000 traces reported in the original paper.
+
+method: |
+  Correlation Power Analysis (CPA) with Hamming-weight leakage model
+  on the output of fqmul(a, b) Montgomery multiplication. Three-level
+  validation:
+    N1: leakage channel confirmation via HW of known intermediate
+    N2: full CPA recovery of a[0] (no prior knowledge)
+    N3: validation by recovering a[1] independently
+  Followed by convergence study (5 to 2000 traces, 30 repetitions each)
+  with Kyber-equivalence success criterion accounting for the four-way
+  alias of Montgomery representation.
+
+target:
+  algorithm: ML-KEM-768 (FIPS 203 / Kyber-768)
+  implementation: PQClean reference C, -O3
+  primitive: pair-pointwise multiplication (basemul, fqmul)
+  capture_platform: STM32F3 @ 7.372 MHz (per dataset documentation)
+  protection_status: unprotected (reference implementation)
+
+dataset:
+  name: Kyber Reference pair-pointwise multiplication SCA dataset
+  authors: [Rezaeezade A., Yap T., Jap D., Bhasin S., Picek S.]
+  doi: 10.5281/zenodo.15352482
+  zenodo_record: 15352482
+  license: CC-BY-4.0
+  publication: IACR ePrint 2025/811
+  size_bytes: 3597103848
+  size_gb: 3.35
+  sha256: 8c97cbf4936ea3214f77a02474ce1ca26f10ccd53cb24f61737c1a83edba0800
+  md5: 083158acd950e5d467a35bc4375e54b3
+  num_files: 2001
+  files_per_set: 100
+  num_traces_total: 100000
+  num_samples_per_trace: 50000
+  trace_dtype: uint16
+  nonces_dtype: uint8
+
+attack_parameters:
+  kyber_q: 3329
+  kyber_qinv: -3327
+  poi_sample_a0: 14156
+  poi_sample_a1: 32941
+  poi_window: 50
+  hypothesis_range: [-3328, 3328]
+  num_hypotheses: 6657
+
+results:
+  level_1_leakage_validation:
+    n_traces: 1000
+    hw_target: a0_times_b1
+    max_correlation: 0.9787
+    poi_sample: 14156
+    snr_vs_random_baseline_db: 20.2
+
+  level_2_a0_recovery:
+    n_traces: 1000
+    ground_truth: 558
+    best_hypothesis: 558
+    correlation: 0.9787
+    runtime_seconds: 9.5
+    success: true
+
+  level_3_a1_recovery:
+    n_traces: 1000
+    ground_truth: 17
+    best_hypothesis: 17
+    correlation: 0.9780
+    runtime_seconds: 9.6
+    success: true
+
+  convergence_study:
+    repetitions_per_size: 30
+    minimum_n_for_100_pct_kyber_equiv: 12
+    minimum_n_for_90_pct_kyber_equiv: 12
+    minimum_n_for_50_pct_kyber_equiv: 10
+
+cpu:
+  device: Raspberry Pi 5 Model B Rev 1.0
+  arch: AArch64
+  core: Cortex-A76
+  clock_hz: 2_400_000_000
+  python: "3.11.2"
+  numpy: "1.24.2"
+  scipy: "1.10.1"
+
+artifacts:
+  source_code:
+    - src/01_sanity_load.py
+    - src/02_cpa_n1_known_value.py
+    - src/03_cpa_n2_full.py
+    - src/04_cpa_n3_validate_a1.py
+    - src/05_load_2000.py
+    - src/06_cpa_convergence.py
+    - src/07_cpa_extreme.py
+    - src/08_diagnose.py
+    - src/09_cpa_extreme_v2.py
+    - src/10_plot_convergence.py
+  results:
+    - results/n1_correlations.npz
+    - results/n2_cpa_a0.npz
+    - results/n3_cpa_a1.npz
+    - results/convergence.npz
+    - results/extreme_convergence.npz
+    - results/extreme_convergence_v2.npz
+    - results/convergence.png
+  papers_local_copy:
+    - papers/paper_2025_811_rezaeezade.pdf
+    - papers/paper_2025_1577_nkotto.pdf
+
+reproducibility:
+  dataset_location: ~/datasets/zenodo-15352482-kyber-ppm/ (not in repo)
+  intermediate_data: data/*.npy (excluded from git, ~1.1 GB)
+  fully_regenerable_from: dataset + src/
+
+ethics:
+  disclosure_status: |
+    Both papers (Rezaeezade 2025/811 and Nkotto 2025/1577) are publicly
+    available preprints with CC-BY license. The PQClean reference
+    implementation is documented as a correctness reference, not for
+    deployment. This reproduction demonstrates a known vulnerability
+    in a known-vulnerable target, illustrating why masked implementations
+    are mandatory for physical-access threat models. No new vulnerability
+    is disclosed.
+
+cross_references:
+  related_attacks_in_mewtwo:
+    - "01-kyberslash-clangover (timing attacks on ML-KEM, negative)"
+    - "04-ravi-pc-oracle-kyber (PC oracle attack on ML-KEM, negative)"

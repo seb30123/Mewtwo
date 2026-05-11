@@ -33,7 +33,7 @@ For each attack, Mewtwo provides:
 | 03 |  Clangover| Kyber/ML-KEM | 13-config static analysis | ❌ No leak  | [attacks/03-clangover](./attacks/03-clangover/) |
 | 04 | Ravi PC oracle (sanity check) | Kyber512 FO branch | Welch t-test on decap timing, n=20 000 randomized | ❌ No timing oracle | [attacks/04-ravi-pc-oracle-kyber/](attacks/04-ravi-pc-oracle-kyber/) |
 | 05 | Pessl-Prokop fault FO | Kyber/Dilithium | QEMU fault injection | ⏳ Planned | – |
-| 06 | FALCON Down | FN-DSA / Falcon | Public dataset re-analysis | ⏳ Planned | – |
+| 06 | **CPA on ML-KEM pair-pointwise** | ML-KEM-768 (PQClean ref) | Power CPA on `fqmul` Montgomery output | ✅ **Full key recovery from 12 traces** | [attacks/06-mlkem-cpa-pairpointwise/](attacks/06-mlkem-cpa-pairpointwise/) |
 | 07 | Dilithium DEMA | ML-DSA | Power analysis (correlation) | ⏳ Planned | – |
 | 08 | SPHINCS+ DPA | SLH-DSA | Power analysis (differential) | ⏳ Planned | – |
 | 09 | Profiled deep-learning SCA | ML-KEM/ML-DSA | Template + neural network | ⏳ Planned | – |
