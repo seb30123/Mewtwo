@@ -1,8 +1,5 @@
 # Attack 01 — KyberSlash on Cortex-A76 (Raspberry Pi 5)
 
-## Status
-
-🚧 In progress — sanity check passed, ready for chosen-ciphertext attack.
 
 ## Reference
 
