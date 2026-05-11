@@ -105,18 +105,3 @@ but for first-order key recovery the sign is enough.
 | b[1] identical in columns [2:4] and [8:10] | OK |
 | HW(b[1]) leaks at a different time from HW(a0*b1) | sample 10830 vs 14156, OK |
 | Same CPA logic recovers a[0] and a[1] independently | OK |
-
-## TODO if someone wants to push further
-
-1. Run the same CPA on the **second** Kyber implementation (pqm4 ARM
-   asm) — does the leakage POI shift?
-2. Implement the **template attack** variant (also in Nkotto's paper)
-   and compare trace efficiency
-3. Test **first-order Boolean masking** against this CPA — verify
-   the masking countermeasure breaks the attack
-4. Extend to **all 256 coefficients** of one secret-key polynomial
-   (probably ~1 hour of compute)
-5. Investigate the four-way alias: can one **resolve the sign** with
-   a second observation? (Nkotto's paper discusses this)
-6. Repeat with **lossy SNR** — artificially add Gaussian noise to traces
-   and characterize the SNR-vs-N tradeoff
