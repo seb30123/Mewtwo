@@ -28,9 +28,9 @@ For each attack, Mewtwo provides:
 
 | # | Attack | Target | Method | Status | Folder |
 |---|--------|--------|--------|--------|--------|
-| 01 | KyberSlash + Clangover | Kyber/ML-KEM | PMU timing + 13-config static analysis | ❌ No leak | [attacks/01-kyberslash-clangover/](attacks/01-kyberslash-clangover/) |
+| 01 | KyberSlash  | Kyber/ML-KEM | PMU timing  | ❌ No leak | [attacks/01-kyberslash/](attacks/01-k/) |
 | 02 | Cache-timing HQC | HQC-128 (PQClean) | Flush+Reload on `alpha_ij_pow` | ❌ No leak | [attacks/02-cache-timing-hqc/](attacks/02-cache-timing-hqc/) |
-| 03 | _(reserved)_ | – | – | ⏳ Planned | – |
+| 03 |  Clangover| Kyber/ML-KEM | 13-config static analysis | ❌ No leak  | [attacks/03-clangover](./attacks/03-clangover/) |
 | 04 | Ravi PC oracle (sanity check) | Kyber512 FO branch | Welch t-test on decap timing, n=20 000 randomized | ❌ No timing oracle | [attacks/04-ravi-pc-oracle-kyber/](attacks/04-ravi-pc-oracle-kyber/) |
 | 05 | Pessl-Prokop fault FO | Kyber/Dilithium | QEMU fault injection | ⏳ Planned | – |
 | 06 | FALCON Down | FN-DSA / Falcon | Public dataset re-analysis | ⏳ Planned | – |
