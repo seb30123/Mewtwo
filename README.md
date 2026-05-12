@@ -25,7 +25,7 @@ For each attack, Mewtwo provides:
 
 
 
-## ⚠️ Educational and Research Disclaimer
+## Educational and Research Disclaimer
 
 **This project is conducted strictly for educational, scientific, and
 defensive research purposes.** All attacks documented in this repository
@@ -71,10 +71,6 @@ violation of the French Penal Code (Articles 323-1 to 323-3) and
 equivalent laws in other jurisdictions (CFAA in the US, Computer Misuse
 Act in the UK, etc.).
 
-If you are a security researcher, vendor, or academic and find this
-work useful, please cite the original papers — not (only) this
-repository. The scientific credit belongs to the authors of the
-underlying research.
 
 ## Attack catalog
 
