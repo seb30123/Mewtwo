@@ -19,6 +19,65 @@ Pour chaque attaque, Mewtwo fournit :
 
 🚧 **En cours de développement** — projet de science ouverte en phase initiale.
 
+
+## ⚠️ Avertissement éducatif et de recherche
+
+**Ce projet est mené strictement à des fins éducatives, scientifiques
+et de recherche défensive.** Toutes les attaques documentées dans ce
+dépôt sont des reproductions de vulnérabilités académiques publiquement
+divulguées, issues de publications évaluées par les pairs. Leur but est
+de :
+
+- Rendre accessible et reproductible la littérature académique sur les
+  attaques par canal auxiliaire contre la cryptographie post-quantique
+- Documenter les défenses multi-couches présentes dans les plates-formes
+  AArch64 modernes
+- Illustrer pourquoi les implémentations masquées sont obligatoires
+  dans les modèles d'adversaire à accès physique
+
+**L'auteur s'engage sur les principes suivants :**
+
+1. **Aucune exploitation de systèmes tiers.** Toutes les expériences
+   sont menées exclusivement sur du matériel possédé par l'auteur
+   (Raspberry Pi 5) ou sur des datasets de recherche publiés
+   ouvertement (notamment Zenodo DOI 10.5281/zenodo.15352482,
+   licence CC-BY-4.0).
+
+2. **Aucune vulnérabilité non divulguée.** Chaque attaque reproduite
+   ici est documentée dans des papiers académiques publics et évalués
+   par les pairs (cités dans le README de chaque attaque). Aucun 0-day
+   n'est révélé.
+
+3. **Calendrier de divulgation responsable respecté.** Toutes les
+   bibliothèques ciblées (liboqs ≤ 0.13.0, implémentations de référence
+   PQClean) ont été remplacées par des versions patchées. Nous utilisons
+   des implémentations historiques ou de référence explicitement
+   marquées comme destinées à la recherche, jamais contre des systèmes
+   en production.
+
+4. **Attribution de toutes les sources de données.** Datasets, papiers
+   et code sont crédités à leurs auteurs originaux dans chaque artefact
+   (README, `lab_notes.md`, `data/manifest.yaml`).
+
+5. **Aucune distribution de code malveillant.** Les scripts Python
+   publiés ici n'opèrent que sur des datasets hors-ligne ou du matériel
+   local appartenant à l'utilisateur. Ils ne peuvent pas être dirigés
+   contre des systèmes distants et ne contiennent aucune charge utile
+   d'exploitation.
+
+**L'utilisation de ce matériel implique l'acceptation de ces principes.**
+Toute adaptation de ce code ou de cette méthodologie pour attaquer des
+systèmes que l'utilisateur ne possède pas ou pour lesquels il n'a pas
+d'autorisation explicite constituerait une violation des articles 323-1
+à 323-3 du Code Pénal français (et lois équivalentes dans les autres
+juridictions : CFAA aux États-Unis, Computer Misuse Act au Royaume-Uni,
+etc.).
+
+Si vous êtes chercheur en sécurité, fournisseur, ou universitaire et
+que ce travail vous est utile, merci de citer les papiers originaux —
+pas (uniquement) ce dépôt. Le crédit scientifique revient aux auteurs
+de la recherche sous-jacente.
+
 ## Catalogue des attaques
 
 | # | Attaque | Cible | Méthode | Statut | Dossier |

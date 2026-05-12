@@ -24,6 +24,58 @@ For each attack, Mewtwo provides:
 🚧 **Work in progress** — this is an early-stage open science project.
 
 
+
+## ⚠️ Educational and Research Disclaimer
+
+**This project is conducted strictly for educational, scientific, and
+defensive research purposes.** All attacks documented in this repository
+are reproductions of publicly disclosed academic vulnerabilities from
+peer-reviewed publications. Their purpose is to:
+
+- Make the academic literature on post-quantum cryptography side-channel
+  attacks accessible and reproducible
+- Document the multi-layered defenses present in modern AArch64 platforms
+- Illustrate why masked implementations are mandatory for physical-access
+  threat models
+
+**The author commits to the following principles:**
+
+1. **No exploitation of third-party systems.** All experiments are
+   conducted exclusively on hardware owned by the author (Raspberry Pi 5)
+   or on publicly published research datasets (notably Zenodo DOI
+   10.5281/zenodo.15352482, CC-BY-4.0 license).
+
+2. **No undisclosed vulnerabilities.** Every attack reproduced here is
+   documented in publicly available, peer-reviewed academic papers
+   (cited in each attack's README). No zero-day is disclosed.
+
+3. **Responsible disclosure timeline respected.** All targeted libraries
+   (liboqs ≤ 0.13.0, PQClean reference implementations) have been
+   superseded by patched versions. We use historical or reference
+   implementations explicitly labeled as research-only, never against
+   production systems.
+
+4. **Attribution of all data sources.** Datasets, papers, and code are
+   credited to their original authors in every artifact (README,
+   `lab_notes.md`, `data/manifest.yaml`).
+
+5. **No malicious code distribution.** The Python scripts published here
+   only operate on offline datasets or local hardware owned by the user.
+   They cannot be pointed at remote systems and contain no exploit
+   payload.
+
+**Use of this material implies acceptance of these principles.** Any
+adaptation of this code or methodology to attack systems the user does
+not own or have explicit authorization to test would constitute a
+violation of the French Penal Code (Articles 323-1 to 323-3) and
+equivalent laws in other jurisdictions (CFAA in the US, Computer Misuse
+Act in the UK, etc.).
+
+If you are a security researcher, vendor, or academic and find this
+work useful, please cite the original papers — not (only) this
+repository. The scientific credit belongs to the authors of the
+underlying research.
+
 ## Attack catalog
 
 | # | Attack | Target | Method | Status | Folder |
