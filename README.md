@@ -72,6 +72,50 @@ equivalent laws in other jurisdictions (CFAA in the US, Computer Misuse
 Act in the UK, etc.).
 
 
+
+## Key findings
+
+After 5 attacks investigated on a single platform (Raspberry Pi 5,
+Cortex-A76), a coherent story emerges about post-quantum cryptography
+side-channel resilience in 2026.
+
+### Four negative results — modern AArch64 + recent libraries are robust
+
+| Attack | Why it fails on Pi 5 |
+|---|---|
+| KyberSlash (timing) | Cortex-A76 integer divider is constant-time by design (vs Cortex-M4's early-termination divider) |
+| Clangover (compiler) | gcc/clang AArch64 emit `umull + lsr` instead of `udiv` from `-O1` onwards |
+| Cache-timing HQC | PQClean's `alpha_ij_pow` table sweep is constant-memory-access by construction |
+| Ravi PC oracle | Explicit `__asm__("" : "+r"(b) : )` opacity barrier in `cmov.c` blocks compiler-introduced branches |
+
+The compound observation is that **the source code, the compiler, the
+CPU and the micro-architecture all cooperate**. Auditing only one layer
+is no longer sufficient — but conversely, modern platforms provide
+defense-in-depth essentially for free.
+
+### One positive result — physical access changes everything
+
+| Attack | What it demonstrates |
+|---|---|
+| CPA on ML-KEM pair-pointwise | Full secret-coefficient recovery from **only 12 power traces** on PQClean reference ML-KEM-768 (vs 10 000 in the original Nkotto 2025 paper) |
+
+The reproduction shows that:
+
+- The **6th defense layer (algorithmic masking) is mandatory** as soon
+  as the threat model includes physical access to the device
+- Reference implementations (PQClean, pqm4) must **never** be deployed
+  in production where physical access is possible
+- The leakage signal is so strong (correlation 0.978) that even tiny
+  trace counts suffice on a clean capture rig
+
+### Methodological discoveries documented along the way
+
+| Pitfall | Where it surfaced | Lesson |
+|---|---|---|
+| Strict ciphertext alternation creates false positive (t=+3.48) | Attack 04 (Ravi PC) | TVLA requires randomized ordering, not alternation |
+| Strict numeric match misses Montgomery aliases (apparent 0% success at N=20 fixed by Kyber-equivalence) | Attack 06 (CPA) | Success criterion must operate modulo q for lattice-based crypto |
+| Pi 5 DVFS is bimodal (1500/2400 MHz, no intermediate P-states under sustained load) | Attack 05 (Hertzbleed) | Hertzbleed-style attacks require thermal-envelope regime not present on Pi 5 |
+
 ## Attack catalog
 
 | # | Attack | Target | Method | Status | Folder |

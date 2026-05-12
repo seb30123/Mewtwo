@@ -74,6 +74,50 @@ juridictions : CFAA aux États-Unis, Computer Misuse Act au Royaume-Uni,
 etc.).
 
 
+
+## Résultats clés
+
+Après 5 attaques investiguées sur une seule plate-forme (Raspberry Pi 5,
+Cortex-A76), une histoire cohérente émerge sur la résistance side-channel
+de la cryptographie post-quantique en 2026.
+
+### Quatre résultats négatifs — AArch64 moderne + bibliothèques récentes résistent
+
+| Attaque | Pourquoi ça échoue sur Pi 5 |
+|---|---|
+| KyberSlash (timing) | Le diviseur entier du Cortex-A76 est constant-time par design (vs le diviseur à terminaison anticipée du Cortex-M4) |
+| Clangover (compilateur) | gcc/clang AArch64 émettent `umull + lsr` au lieu de `udiv` dès `-O1` |
+| Cache-timing HQC | La table `alpha_ij_pow` de PQClean est parcourue intégralement (constant-memory-access par construction) |
+| Ravi PC oracle | Barrière d'opacité explicite `__asm__("" : "+r"(b) : )` dans `cmov.c` empêche les branches introduites par le compilateur |
+
+L'observation composite est que **le code source, le compilateur, le CPU
+et la micro-architecture coopèrent tous**. Auditer une seule couche ne
+suffit plus — mais à l'inverse, les plates-formes modernes fournissent
+de la défense en profondeur essentiellement gratuitement.
+
+### Un résultat positif — l'accès physique change tout
+
+| Attaque | Ce qu'elle démontre |
+|---|---|
+| CPA sur pair-pointwise ML-KEM | Récupération complète d'un coefficient secret à partir de **seulement 12 traces de puissance** sur ML-KEM-768 PQClean de référence (vs 10 000 dans le papier original Nkotto 2025) |
+
+La reproduction montre que :
+
+- La **6ème couche de défense (masquage algorithmique) est obligatoire**
+  dès que le modèle d'adversaire inclut l'accès physique au composant
+- Les implémentations de référence (PQClean, pqm4) ne doivent **jamais**
+  être déployées en production où l'accès physique est possible
+- Le signal de fuite est si fort (corrélation 0,978) que même très peu
+  de traces suffisent sur un banc de mesure propre
+
+### Découvertes méthodologiques documentées en chemin
+
+| Piège | Où il est apparu | Leçon |
+|---|---|---|
+| L'alternance stricte des ciphertexts crée un faux positif (t=+3.48) | Attaque 04 (Ravi PC) | TVLA exige un ordre randomisé, pas l'alternance |
+| Le match numérique strict manque les alias Montgomery (0% apparent à N=20 corrigé par équivalence Kyber) | Attaque 06 (CPA) | Le critère de succès doit opérer modulo q pour la crypto lattice |
+| Le DVFS de la Pi 5 est bimodal (1500/2400 MHz, pas de P-states intermédiaires sous charge soutenue) | Attaque 05 (Hertzbleed) | Les attaques Hertzbleed exigent un régime d'enveloppe thermique absent de la Pi 5 |
+
 ## Catalogue des attaques
 
 | # | Attaque | Cible | Méthode | Statut | Dossier |
