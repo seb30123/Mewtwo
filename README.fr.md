@@ -73,10 +73,6 @@ d'autorisation explicite constituerait une violation des articles 323-1
 juridictions : CFAA aux États-Unis, Computer Misuse Act au Royaume-Uni,
 etc.).
 
-Si vous êtes chercheur en sécurité, fournisseur, ou universitaire et
-que ce travail vous est utile, merci de citer les papiers originaux —
-pas (uniquement) ce dépôt. Le crédit scientifique revient aux auteurs
-de la recherche sous-jacente.
 
 ## Catalogue des attaques
 
