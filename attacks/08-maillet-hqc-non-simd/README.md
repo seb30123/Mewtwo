@@ -110,6 +110,81 @@ Key recovery with a budget of 1 024 candidates corresponds to about **a few seco
 
 This **does not affect** servers running the SIMD-optimized x86-64 implementation, nor does it generalize trivially to other code-based schemes — the leakage is specific to the bit-by-bit structure of `expand_and_sum` and the lack of constant-time decoding.
 
+## Real-world impact — concrete scenarios
+
+The attack recovers a 16-bit fragment of HQC's internal state from a single
+power trace, after offline profiling on a sibling device. This is not
+catastrophic on its own (HQC uses several thousand-bit keys), but it is the
+foothold for several practical attack scenarios. NIST standardized HQC on
+11 March 2025, so widespread deployment is expected in 2026-2028 — making
+this paper a pre-emptive warning to implementers.
+
+### Scenario 1 — Used IoT device
+
+You buy a used smart-home hub (Hue Bridge, SmartThings, Nest) on a
+second-hand marketplace. The device speaks HQC to peripherals
+(sensors, cameras, garage door openers). An attacker who bought the same
+model new can:
+
+1. Solder a ChipWhisperer-Lite (~250 EUR) to a sibling device, capture
+   65 536 profiling traces over ~1 hour
+2. Quickly intercept one trace from the target hub during a key exchange
+3. With a budget of 1 024 trial decapsulations (~1 minute of CPU),
+   recover a 16-bit fragment of the session key with 54% probability
+
+Repeating across several `expand_and_sum` calls per session yields
+enough fragments to decrypt subsequent communications between the hub
+and its peripherals: baby cameras, presence sensors, door codes.
+
+### Scenario 2 — Smart cards and biometric passports
+
+NIST recommends HQC for post-quantum electronic ID cards and biometric
+passports (timeline 2030+). These run on STM32-class microcontrollers
+with **no SIMD**, which forces the vulnerable reference implementation.
+A malicious customs terminal or a hostile coworker with 30 seconds of
+card access can:
+
+1. Capture the power trace during a single card authentication
+2. Use a pre-built profile (trained on a similar card model) to recover
+   key bits
+3. Replay the recovered material to forge later authentications
+
+Consequence: **post-quantum identity spoofing**, defeating the very
+threat model PQC was deployed for.
+
+### Scenario 3 — V2X automotive
+
+Vehicle-to-everything (V2X) communications between cars and charging
+stations use ARM Cortex-M microcontrollers. NIST mandates post-quantum
+crypto for these by 2030.
+
+An attacker installs a power-side-channel probe on a public charging
+station. Each car that authenticates leaks one trace. With enough
+traces collected across the fleet:
+
+- Charge bills can be redirected to a victim's account
+- More seriously, V2X authentication is used in **collision-avoidance
+  protocols** — forged messages could fake braking commands or
+  identity to nearby vehicles
+
+### Where we stand today
+
+| Question | Reality in 2026 |
+|---|---|
+| Is HQC deployed in production? | Not yet at scale. First deployments expected 2026-2028. |
+| Are there vulnerable targets today? | Industrial PoC firmwares that already integrate HQC on Cortex-M are vulnerable. |
+| Cost of the attack? | ChipWhisperer-Lite (~250 EUR) + 1 h physical access for profiling + 30 s for the targeted capture. |
+| Difficulty? | Low once the profile is built. The attack is a textbook profiling attack: training is the hard part, exploitation is trivial. |
+| Mitigation cost? | Masking countermeasures (the authors' recommendation) cost 2-4x in performance. Loop unrolling is cheaper but only partial. |
+
+### The message for implementers
+
+Without masking, on a microcontroller without SIMD, HQC is breakable
+with a 250 EUR oscilloscope and 30 seconds of physical access. NIST
+finalized HQC in March 2025. Implementers have a 12-24 month window
+to deploy masking countermeasures before the first consumer products
+ship — this paper exists to make that window count.
+
 ## Countermeasures
 
 The authors of the paper propose two main countermeasures:
