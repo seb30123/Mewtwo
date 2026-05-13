@@ -75,7 +75,7 @@ Act in the UK, etc.).
 
 ## Key findings
 
-After 5 attacks investigated on a single platform (Raspberry Pi 5,
+After 6 attacks investigated on a single platform (Raspberry Pi 5,
 Cortex-A76), a coherent story emerges about post-quantum cryptography
 side-channel resilience in 2026.
 
@@ -93,11 +93,12 @@ CPU and the micro-architecture all cooperate**. Auditing only one layer
 is no longer sufficient — but conversely, modern platforms provide
 defense-in-depth essentially for free.
 
-### One positive result — physical access changes everything
+### Two positive results — physical access changes everything
 
 | Attack | What it demonstrates |
 |---|---|
-| CPA on ML-KEM pair-pointwise | Full secret-coefficient recovery from **only 12 power traces** on PQClean reference ML-KEM-768 (vs 10 000 in the original Nkotto 2025 paper) |
+| **Attack 06** — CPA on ML-KEM pair-pointwise | Full secret-coefficient recovery from **only 12 power traces** on PQClean reference ML-KEM-768 (vs 10 000 in the original Nkotto 2025 paper) |
+| **Attack 08** — Maillet HQC non-SIMD | Key recovery on HQC's `expand_and_sum` via Bayes-optimal Gaussian classification + key enumeration: **53.6% success at budget 1 024 (×64 speedup vs brute force), 94.8% at budget 16 384 (×4 speedup)** over 13 108 unseen traces, reproducing Maillet et al. (CRYPTO 2025) in pure Python |
 
 The reproduction shows that:
 
@@ -115,6 +116,7 @@ The reproduction shows that:
 | Strict ciphertext alternation creates false positive (t=+3.48) | Attack 04 (Ravi PC) | TVLA requires randomized ordering, not alternation |
 | Strict numeric match misses Montgomery aliases (apparent 0% success at N=20 fixed by Kyber-equivalence) | Attack 06 (CPA) | Success criterion must operate modulo q for lattice-based crypto |
 | Pi 5 DVFS is bimodal (1500/2400 MHz, no intermediate P-states under sustained load) | Attack 05 (Hertzbleed) | Hertzbleed-style attacks require thermal-envelope regime not present on Pi 5 |
+| Two-pass loop unrolling in HQC `expand_and_sum` revealed by POI pattern (342→146 then 570→370, step 28) | Attack 08 (Maillet HQC) | The bit-by-bit POI map is a fingerprint of the implementation's micro-structure, not in the original paper |
 
 ## Attack catalog
 
@@ -127,7 +129,7 @@ The reproduction shows that:
 | 05 | Pessl-Prokop fault FO | Kyber/Dilithium | QEMU fault injection | ⏳ Planned | – |
 | 06 | **CPA on ML-KEM pair-pointwise** | ML-KEM-768 (PQClean ref) | Power CPA on `fqmul` Montgomery output | ✅ **Full key recovery from 12 traces** | [attacks/06-mlkem-cpa-pairpointwise/](attacks/06-mlkem-cpa-pairpointwise/) |
 | 07 | Dilithium DEMA | ML-DSA | Power analysis (correlation) | ⏳ Planned | – |
-| 08 | SPHINCS+ DPA | SLH-DSA | Power analysis (differential) | ⏳ Planned | – |
+| 08 | **Maillet HQC non-SIMD** | HQC (CRYPTO 2025) | Bayes-optimal Gaussian classification + key enumeration | ✅ **Key recovery, ×64 speedup at 54% confidence** | [attacks/08-maillet-hqc-non-simd/](attacks/08-maillet-hqc-non-simd/) |
 | 09 | Profiled deep-learning SCA | ML-KEM/ML-DSA | Template + neural network | ⏳ Planned | – |
 | 10 | NTT timing leak | Kyber/Dilithium NTT | PMU timing on NTT | ⏳ Planned | – |
 

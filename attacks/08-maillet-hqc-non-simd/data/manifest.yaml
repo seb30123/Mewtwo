@@ -1,0 +1,45 @@
+# Dataset manifest for attack 08 — Maillet HQC non-SIMD
+# This dataset is NOT included in the Git repository (526 MB).
+# Follow the instructions below to download and prepare it locally.
+
+dataset:
+  name: "Maillet HQC non-SIMD power traces"
+  source: "Maillet, Nugier, Migliore, Deneuville (CRYPTO 2025)"
+  paper: "https://eprint.iacr.org/2025/1270"
+  repository: "https://gitlab.laas.fr/nmaillet/kr-sca-hqc-additional-materials"
+  license: "GPL-3.0 (per repository LICENSE file)"
+
+target:
+  function: "expand_and_sum"  # HQC reference C implementation
+  hardware: "STM32F0/F1/F3/F4 microcontrollers via ChipWhisperer-Lite"
+  capture_tool: "ChipWhisperer-Lite (NewAE)"
+
+data:
+  format: "HDF5"
+  total_size: "526 MB (extracted)"
+  compressed: "49 MB (output.tar.xz)"
+  global_attributes:
+    samples: 1000        # samples per trace
+    traces: 65536        # one trace per 16-bit input value
+    gain: 31             # ChipWhisperer ADC gain
+    replay: 10           # captures averaged per input value
+  structure: |
+    Top-level: 65536 datasets named by hex of 32-bit input value
+    (only the lower 16 bits vary, upper 16 are fixed at 0).
+    Each dataset:
+      - shape: (1, 1000)
+      - dtype: float64
+      - attribute 'value': 4 uint8 bytes encoding the input
+
+download:
+  steps:
+    - "git clone https://gitlab.laas.fr/nmaillet/kr-sca-hqc-additional-materials.git"
+    - "cd kr-sca-hqc-additional-materials/analyse_data"
+    - "tar xJf output.tar.xz"
+    - "Place output.hdf5 in this directory or symlink it"
+  alternative:
+    - "ln -s ~/kr-sca-hqc-additional-materials/analyse_data/output.hdf5 output.hdf5"
+
+ground_truth:
+  description: "The 16-bit input value is in the dataset name (hex) and in the 'value' attribute"
+  validation: "refs/authors_analyse.csv contains POI and probability per bit"

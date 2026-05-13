@@ -1,0 +1,7 @@
+# Raw dataset (download separately, see manifest.yaml)
+output.hdf5
+output.tar.xz
+
+# Cached/derived data
+*.npz
+*.npy
