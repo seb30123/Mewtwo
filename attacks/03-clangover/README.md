@@ -1,3 +1,11 @@
+> **NOTE (May 2026):** This attack disassembles `poly_compress`, which is
+> the locus of **KyberSlash** (already covered in attack #01). The actual
+> Clangover attack (CVE-2024-37880) targets `poly_frommsg` and is now
+> documented in **[attack #09](../09-clangover-poly-frommsg-aarch64/)**.
+> This folder is kept for historical reference of the optimization-level
+> mapping of `poly_compress` on AArch64.
+
+
 # Attack 02 — Clangover on Cortex-A76 (Optimization-Level Mapping)
 
 > **Result**: Clangover manifests on AArch64 *only* at clang `-O0`.

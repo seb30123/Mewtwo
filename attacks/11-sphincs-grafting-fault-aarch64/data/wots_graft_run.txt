@@ -1,0 +1,15 @@
+# Run on Linux 6.12.75+rpt-rpi-2712 aarch64, Mon May 25 12:41:06 UTC 2026
+# python3 Python 3.11.2
+
+WOTS+ params: N=16 W=16 LEN1=32 LEN2=3 LEN=35
+
+q_faults | all-digit min | forge nonce | verifier verdict
+------------------------------------------------------------
+      0  |   avg= 8.57   |         -- | no forge
+      5  |   avg= 1.94   |        502 | VALID  <-- UNIVERSAL FORGERY
+     10  |   avg= 0.66   |          1 | VALID  <-- UNIVERSAL FORGERY
+     20  |   avg= 0.43   |          0 | VALID  <-- UNIVERSAL FORGERY
+     40  |   avg= 0.06   |          0 | VALID  <-- UNIVERSAL FORGERY
+     80  |   avg= 0.00   |          0 | VALID  <-- UNIVERSAL FORGERY
+
+NEGATIVE CONTROL (no fault, one signature only): forge IMPOSSIBLE (checksum protects) -- as expected

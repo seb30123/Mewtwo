@@ -1,0 +1,23 @@
+target:
+  primitive: HQC-128
+  pre_patch:
+    source: PQClean
+    repo: https://github.com/PQClean/PQClean
+    commit: 99630892
+    date: 2024-11-13
+    path: crypto_kem/hqc-128/clean/
+    note: |
+      Last update to HQC files in PQClean predates the YODO fix
+      by 9 months. As of May 2026, both leaks are still present
+      in the production-deployed PQClean codebase.
+  post_patch:
+    source: HQC upstream (official)
+    repo: https://gitlab.com/pqc-hqc/hqc
+    commit: f46e542
+    tag: v5.0.0
+    date: 2025-08-22
+    path: src/ref/
+    note: |
+      Official HQC v5.0.0 release. Per ePrint 2025/2162:
+      - Leak 1 (gf_carryless_mul) confirmed fixed
+      - Leak 2 (mask64 in fixed-weight sampling) only partially fixed

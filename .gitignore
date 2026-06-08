@@ -55,3 +55,36 @@ Thumbs.db
 # Secrets
 .env
 *.key
+
+# ---- PQ-Lab cleanup (May 2026) ----
+# Rust build artifacts (centaines de Mo)
+target/
+**/target/
+
+# Object files & static libs (régénérables ; la preuve est le désassemblage .s)
+*.o
+*.obj
+*.a
+
+# Backups
+*.orig
+*.bak
+
+# Gros CSV bruts par-échantillon (archivés sur Zenodo ; les résumés dans results/ sont gardés)
+attacks/*/data/*.csv
+
+# Clones upstream vendorés — NON commités (chacun a son .git ; voir firmware/UPSTREAM.md)
+attacks/*/firmware/rustcrypto-signatures/
+attacks/*/firmware/rustcrypto-signatures-patched/
+attacks/*/firmware/kyber-vulnerable/
+attacks/*/firmware/kyber-patched/
+attacks/*/firmware/clangover-poc/
+attacks/*/extension/refs/clangover/
+attacks/*/extension/refs/kyber/
+attacks/*/extension/refs/liboqs-0.13.0/
+attacks/*/extension/refs/liboqs-fix-check/
+
+# Exécutables compilés des harness (régénérables ; on garde les .c/.py sources)
+attacks/*/firmware/harness/*_harness
+attacks/*/firmware/harness/timing_*
+attacks/*/firmware/**/*.bin

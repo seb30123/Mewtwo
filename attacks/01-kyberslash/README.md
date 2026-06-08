@@ -1,5 +1,15 @@
 # Attack 01 — KyberSlash on Cortex-A76 (Raspberry Pi 5)
 
+> **Addendum (May 2026, from attack #10):** The conclusion below — "A76 integer
+> divide is constant-time, <0.3% variation" — holds only at the measurement
+> resolution used here (9 fixed dividends, coarse 10000-division aggregates by
+> 3329). Attack #10 measured a bare `udiv` with 200000 uniform dividends and a
+> Pearson test, and found the A76 divider IS data-dependent (~1 cycle/division
+> correlated with the dividend's bit_length, for generic divisors). #10 refines
+> #01: the divider is not constant-time, but the effect is below the detection
+> threshold of this coarse method. See attack #10 for the full measurement.
+
+
 
 ## Reference
 

@@ -1,0 +1,39 @@
+diff --git a/ml-dsa/src/algebra.rs b/ml-dsa/src/algebra.rs
+index 559b68a..db92a55 100644
+--- a/ml-dsa/src/algebra.rs
++++ b/ml-dsa/src/algebra.rs
+@@ -56,6 +56,7 @@ pub(crate) trait Decompose {
+ 
+ impl Decompose for Elem {
+     // Algorithm 36 Decompose
++    #[inline(never)]
+     fn decompose<TwoGamma2: Unsigned>(self) -> (Elem, Elem) {
+         let r_plus = self.clone();
+         let r0 = r_plus.mod_plus_minus::<TwoGamma2>();
+@@ -261,3 +262,15 @@ mod test {
+         }
+     }
+ }
++
++
++/// Benchmark hook for CVE-2026-22705 timing study (PQ-Lab attack #10).
++/// Plain `pub` Rust fn (no FFI) so an in-crate example can call it directly;
++/// the linker keeps it because it is genuinely referenced. Built at
++/// opt-level=0 to preserve the udiv inside decompose.
++#[inline(never)]
++pub fn bench_decompose_65(r: u32) -> u32 {
++    type Mod = <crate::MlDsa65 as crate::ParameterSet>::TwoGamma2;
++    let (high, low) = Elem::new(r).decompose::<Mod>();
++    high.0 ^ low.0
++}
+diff --git a/ml-dsa/src/lib.rs b/ml-dsa/src/lib.rs
+index 1d04607..1efb4f7 100644
+--- a/ml-dsa/src/lib.rs
++++ b/ml-dsa/src/lib.rs
+@@ -1203,3 +1203,6 @@ mod test {
+         assert_from_seed_equality::<MlDsa87>();
+     }
+ }
++
++#[doc(hidden)]
++pub use crate::algebra::bench_decompose_65;

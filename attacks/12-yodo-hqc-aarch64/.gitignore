@@ -1,0 +1,10 @@
+# Build artefacts
+*.o
+*.elf
+*.bin
+firmware/harness/build/
+# Datasets bruts (à mettre sur Zenodo plus tard)
+results/*.h5
+results/*.npz
+# Disasm complets (on garde des extraits annotés)
+data/disasm/full/
