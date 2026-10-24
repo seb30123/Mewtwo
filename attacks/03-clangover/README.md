@@ -6,7 +6,7 @@
 > mapping of `poly_compress` on AArch64.
 
 
-# Attack 02 — Clangover on Cortex-A76 (Optimization-Level Mapping)
+# Attack 03 — Clangover on Cortex-A76 (Optimization-Level Mapping)
 
 > **Result**: Clangover manifests on AArch64 *only* at clang `-O0`.
 > From `-O1` onwards, the AArch64 backend applies division-by-constant

@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use Mewtwo in your research, please cite it as below."
+title: "Mewtwo: a reproducible catalogue of side-channel and fault-injection attacks on the NIST post-quantum cryptography standards"
+abstract: >-
+  Mewtwo reproduces published physical attacks (side-channel and fault) against
+  the NIST post-quantum cryptography standards (ML-KEM, ML-DSA, SLH-DSA, FN-DSA,
+  HQC) and evaluates whether they still hold on modern deployed hardware and
+  toolchains — primarily a Raspberry Pi 5 (Cortex-A76, AArch64). Negative and
+  constant-time results are documented with the same rigour as successful breaks.
+type: software
+authors:
+  - alias: seb30123
+    website: "https://github.com/seb30123"
+repository-code: "https://github.com/seb30123/Mewtwo"
+url: "https://github.com/seb30123/Mewtwo"
+keywords:
+  - post-quantum cryptography
+  - side-channel analysis
+  - fault injection
+  - constant-time
+  - ML-KEM
+  - HQC
+  - SLH-DSA
+  - AArch64
+license: MIT

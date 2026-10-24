@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Sébastien"}
+    {name = "seb30123"}
 ]
 keywords = ["post-quantum", "side-channel", "fault-injection", "cryptography"]
 classifiers = [
@@ -52,10 +52,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/USERNAME/pq-lab"
-Documentation = "https://USERNAME.github.io/pq-lab"
-Repository = "https://github.com/USERNAME/pq-lab"
-Issues = "https://github.com/USERNAME/pq-lab/issues"
+Homepage = "https://github.com/seb30123/Mewtwo"
+Repository = "https://github.com/seb30123/Mewtwo"
+Issues = "https://github.com/seb30123/Mewtwo/issues"
 
 [build-system]
 requires = ["hatchling"]

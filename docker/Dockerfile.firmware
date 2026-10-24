@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 
-LABEL org.opencontainers.image.source="https://github.com/USERNAME/pq-lab"
+LABEL org.opencontainers.image.source="https://github.com/seb30123/Mewtwo"
 LABEL org.opencontainers.image.description="PQ-Lab firmware build environment (arm-none-eabi)"
 
 ENV DEBIAN_FRONTEND=noninteractive

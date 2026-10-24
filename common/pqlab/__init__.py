@@ -2,6 +2,6 @@
 
 __version__ = "0.1.0"
 
-from pqlab import metrics, traces, viz
+from . import metrics, traces, viz
 
 __all__ = ["metrics", "traces", "viz"]

@@ -4,8 +4,8 @@
 set -euo pipefail
 
 SRC=$HOME/research/pqclean/crypto_kem/hqc-128/clean
-OUT=$HOME/Mewtwo/attacks/09-yodo-hqc-aarch64/data/disasm
-RESULTS=$HOME/Mewtwo/attacks/09-yodo-hqc-aarch64/results
+OUT=$HOME/Mewtwo/attacks/12-yodo-hqc-aarch64/data/disasm
+RESULTS=$HOME/Mewtwo/attacks/12-yodo-hqc-aarch64/results
 mkdir -p "$OUT" "$RESULTS"
 
 COMPILERS=(gcc-12 clang-14 clang-15 clang-16 clang-19)

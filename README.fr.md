@@ -1,141 +1,163 @@
 # Mewtwo
 
-> Catalogue reproductible des attaques side-channel et fault injection sur les standards de cryptographie post-quantique du NIST.
+> Catalogue reproductible d'attaques par canaux auxiliaires et par injection de fautes sur les standards de cryptographie post-quantique du NIST.
+
+[![License: MIT](https://img.shields.io/badge/code-MIT-yellow.svg)](LICENSE)
+[![Data: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-blue.svg)](LICENSE-DATA)
+[![Platform: AArch64](https://img.shields.io/badge/platform-Cortex--A76%20%2F%20AArch64-success.svg)](#plateformes--m%C3%A9thodologie)
 
 🇬🇧 [Read in English](README.md)
 
 ## Qu'est-ce que Mewtwo ?
 
-Mewtwo est un catalogue ouvert et reproductible documentant l'analyse des 10 attaques physiques publiques majeures contre les standards de cryptographie post-quantique du NIST (FIPS 203 ML-KEM, FIPS 204 ML-DSA, FIPS 205 SLH-DSA, HQC, FN-DSA).
+Mewtwo est un catalogue ouvert et reproductible d'**attaques physiques** — canaux
+auxiliaires et fautes — contre la cryptographie retenue par le NIST pour remplacer
+RSA et ECC à l'ère post-quantique : **ML-KEM** (FIPS 203), **ML-DSA** (FIPS 204),
+**SLH-DSA** (FIPS 205), **FN-DSA** (Falcon) et **HQC**.
 
-Pour chaque attaque, Mewtwo fournit :
-- Un firmware cible épinglé (commit `pqm4`, `liboqs` ou `mlkem-native`)
-- Un notebook Jupyter implémentant le pipeline d'analyse
-- Des datasets publics (DOI Zenodo) ou des simulations contrôlées (QEMU/ARCHIE)
-- Un environnement Docker reproductible
-- Des "lab notes" honnêtes documentant les échecs autant que les succès
+Pour chaque attaque, l'objectif est de reprendre un résultat académique publié et
+de répondre à une question concrète : *tient-il encore sur le matériel et les
+chaînes de compilation réellement déployés ?* Chaque entrée fournit :
 
-## Statut
+- une **cible figée** — le commit upstream exact de `PQClean`, `liboqs`,
+  `mlkem-native` ou `RustCrypto`, pour que le résultat reste reproductible des
+  années plus tard ;
+- la **chaîne d'analyse** — matrices de désassemblage, harnais de timing PMU, ou
+  code de CPA / faute selon la classe d'attaque ;
+- des **notes de laboratoire** honnêtes (`lab_notes.md`) qui documentent les
+  impasses et les décisions, pas seulement le résultat propre ;
+- un **manifeste** (`data/manifest.yaml`) consignant provenance, DOI des datasets
+  et environnement.
 
-🚧 **En cours de développement** — projet de science ouverte en phase initiale.
+**Les résultats négatifs sont traités comme des contributions de premier plan.**
+Démontrer *pourquoi* une attaque échoue sur une plate-forme donnée — quelle
+instruction du compilateur, quelle propriété micro-architecturale ferme la fuite —
+est aussi utile qu'une compromission réussie, et c'est l'essentiel de ce catalogue.
 
+## Ce que montre le catalogue
 
-## ⚠️ Avertissement éducatif et de recherche
+À travers onze investigations, une image cohérente se dégage pour la PQC de 2026
+sur un cœur ARM 64 bits moderne :
 
-**Ce projet est mené strictement à des fins éducatives, scientifiques
-et de recherche défensive.** Toutes les attaques documentées dans ce
-dépôt sont des reproductions de vulnérabilités académiques publiquement
-divulguées, issues de publications évaluées par les pairs. Leur but est
-de :
-
-- Rendre accessible et reproductible la littérature académique sur les
-  attaques par canal auxiliaire contre la cryptographie post-quantique
-- Documenter les défenses multi-couches présentes dans les plates-formes
-  AArch64 modernes
-- Illustrer pourquoi les implémentations masquées sont obligatoires
-  dans les modèles d'adversaire à accès physique
-
-**L'auteur s'engage sur les principes suivants :**
-
-1. **Aucune exploitation de systèmes tiers.** Toutes les expériences
-   sont menées exclusivement sur du matériel possédé par l'auteur
-   (Raspberry Pi 5) ou sur des datasets de recherche publiés
-   ouvertement (notamment Zenodo DOI 10.5281/zenodo.15352482,
-   licence CC-BY-4.0).
-
-2. **Aucune vulnérabilité non divulguée.** Chaque attaque reproduite
-   ici est documentée dans des papiers académiques publics et évalués
-   par les pairs (cités dans le README de chaque attaque). Aucun 0-day
-   n'est révélé.
-
-3. **Calendrier de divulgation responsable respecté.** Toutes les
-   bibliothèques ciblées (liboqs ≤ 0.13.0, implémentations de référence
-   PQClean) ont été remplacées par des versions patchées. Nous utilisons
-   des implémentations historiques ou de référence explicitement
-   marquées comme destinées à la recherche, jamais contre des systèmes
-   en production.
-
-4. **Attribution de toutes les sources de données.** Datasets, papiers
-   et code sont crédités à leurs auteurs originaux dans chaque artefact
-   (README, `lab_notes.md`, `data/manifest.yaml`).
-
-5. **Aucune distribution de code malveillant.** Les scripts Python
-   publiés ici n'opèrent que sur des datasets hors-ligne ou du matériel
-   local appartenant à l'utilisateur. Ils ne peuvent pas être dirigés
-   contre des systèmes distants et ne contiennent aucune charge utile
-   d'exploitation.
-
-**L'utilisation de ce matériel implique l'acceptation de ces principes.**
-Toute adaptation de ce code ou de cette méthodologie pour attaquer des
-systèmes que l'utilisateur ne possède pas ou pour lesquels il n'a pas
-d'autorisation explicite constituerait une violation des articles 323-1
-à 323-3 du Code Pénal français (et lois équivalentes dans les autres
-juridictions : CFAA aux États-Unis, Computer Misuse Act au Royaume-Uni,
-etc.).
-
-
-
-## Résultats clés
-
-Après 5 attaques investiguées sur une seule plate-forme (Raspberry Pi 5,
-Cortex-A76), une histoire cohérente émerge sur la résistance side-channel
-de la cryptographie post-quantique en 2026.
-
-### Quatre résultats négatifs — AArch64 moderne + bibliothèques récentes résistent
-
-| Attaque | Pourquoi ça échoue sur Pi 5 |
-|---|---|
-| KyberSlash (timing) | Le diviseur entier du Cortex-A76 est constant-time par design (vs le diviseur à terminaison anticipée du Cortex-M4) |
-| Clangover (compilateur) | gcc/clang AArch64 émettent `umull + lsr` au lieu de `udiv` dès `-O1` |
-| Cache-timing HQC | La table `alpha_ij_pow` de PQClean est parcourue intégralement (constant-memory-access par construction) |
-| Ravi PC oracle | Barrière d'opacité explicite `__asm__("" : "+r"(b) : )` dans `cmov.c` empêche les branches introduites par le compilateur |
-
-L'observation composite est que **le code source, le compilateur, le CPU
-et la micro-architecture coopèrent tous**. Auditer une seule couche ne
-suffit plus — mais à l'inverse, les plates-formes modernes fournissent
-de la défense en profondeur essentiellement gratuitement.
-
-### Un résultat positif — l'accès physique change tout
-
-| Attaque | Ce qu'elle démontre |
-|---|---|
-| CPA sur pair-pointwise ML-KEM | Récupération complète d'un coefficient secret à partir de **seulement 12 traces de puissance** sur ML-KEM-768 PQClean de référence (vs 10 000 dans le papier original Nkotto 2025) |
-
-La reproduction montre que :
-
-- La **6ème couche de défense (masquage algorithmique) est obligatoire**
-  dès que le modèle d'adversaire inclut l'accès physique au composant
-- Les implémentations de référence (PQClean, pqm4) ne doivent **jamais**
-  être déployées en production où l'accès physique est possible
-- Le signal de fuite est si fort (corrélation 0,978) que même très peu
-  de traces suffisent sur un banc de mesure propre
-
-### Découvertes méthodologiques documentées en chemin
-
-| Piège | Où il est apparu | Leçon |
-|---|---|---|
-| L'alternance stricte des ciphertexts crée un faux positif (t=+3.48) | Attaque 04 (Ravi PC) | TVLA exige un ordre randomisé, pas l'alternance |
-| Le match numérique strict manque les alias Montgomery (0% apparent à N=20 corrigé par équivalence Kyber) | Attaque 06 (CPA) | Le critère de succès doit opérer modulo q pour la crypto lattice |
-| Le DVFS de la Pi 5 est bimodal (1500/2400 MHz, pas de P-states intermédiaires sous charge soutenue) | Attaque 05 (Hertzbleed) | Les attaques Hertzbleed exigent un régime d'enveloppe thermique absent de la Pi 5 |
+- **Trois compromissions complètes.** Deux récupérations de clé secrète par analyse
+  de consommation (CPA sur ML-KEM, attaque profilée sur HQC) et une contrefaçon
+  universelle à partir d'une seule faute simulée sur le cœur WOTS+ de SLH-DSA. Dès
+  que le modèle de menace inclut l'accès physique, le masquage algorithmique n'est
+  pas optionnel.
+- **Un mur de résultats négatifs « temps constant » sur AArch64.** KyberSlash,
+  Clangover, cache-timing HQC, l'oracle PC de Ravi, Hertzbleed, la CVE Decompose
+  `udiv` de ML-DSA et les fuites YODO de HQC **ne se reproduisent pas** sur un
+  Cortex-A76 avec gcc/clang récents. La raison est constante et précise : le backend
+  A76 abaisse les idiomes vulnérables vers des `csel` / `csetm` / `sbfx` sans
+  branchement et dispose d'un diviseur entier à temps constant. Le source, le
+  compilateur et la micro-architecture coopèrent — une défense en profondeur que les
+  plates-formes modernes offrent quasi gratuitement.
+- **La fuite est une propriété de l'*abaissement* (lowering), pas du source.** Le
+  même C sûr sur AArch64 est vulnérable sur x86_64 (démontré en contrôle positif
+  dans l'attaque 09). Auditer une seule couche ne suffit plus.
 
 ## Catalogue des attaques
 
-| # | Attaque | Cible | Méthode | Statut | Dossier |
-|---|---------|-------|---------|--------|---------|
-| 01 | KyberSlash + Clangover | Kyber/ML-KEM | Timing PMU + analyse statique 13 configs | ❌ Pas de fuite | [attacks/01-kyberslash-clangover/](attacks/01-kyberslash-clangover/) |
-| 02 | Cache-timing HQC | HQC-128 (PQClean) | Flush+Reload sur `alpha_ij_pow` | ❌ Pas de fuite | [attacks/02-cache-timing-hqc/](attacks/02-cache-timing-hqc/) |
-| 03 | _(réservé)_ | – | – | ⏳ Planifié | – |
-| 04 | Ravi PC oracle (sanity check) | Kyber512 branche FO | t-test de Welch sur timing decap, n=20 000 randomisé | ❌ Pas d'oracle au timing | [attacks/04-ravi-pc-oracle-kyber/](attacks/04-ravi-pc-oracle-kyber/) |
-| 05 | Pessl-Prokop fault FO | Kyber/Dilithium | Injection de fautes via QEMU | ⏳ Planifié | – |
-| 06 | **CPA sur ML-KEM pair-pointwise** | ML-KEM-768 (PQClean ref) | CPA sur sortie Montgomery `fqmul` | ✅ **Récupération clé avec 12 traces** | [attacks/06-mlkem-cpa-pairpointwise/](attacks/06-mlkem-cpa-pairpointwise/) |
-| 07 | Dilithium DEMA | ML-DSA | Analyse de puissance (corrélation) | ⏳ Planifié | – |
-| 08 | SPHINCS+ DPA | SLH-DSA | Analyse de puissance (différentielle) | ⏳ Planifié | – |
-| 09 | SCA profilée par deep-learning | ML-KEM/ML-DSA | Template + réseau de neurones | ⏳ Planifié | – |
-| 10 | Fuite timing NTT | NTT Kyber/Dilithium | Timing PMU sur NTT | ⏳ Planifié | – |
+| # | Attaque | Cible | Classe | Résultat |
+|---|---------|-------|--------|----------|
+| 01 | [KyberSlash](attacks/01-kyberslash/) | Kyber / ML-KEM | Timing (PMU) | ❌ Pas de fuite — diviseur A76 à temps constant |
+| 02 | [Cache-timing HQC](attacks/02-cache-timing-hqc/) | HQC-128 (PQClean) | Cache (Flush+Reload) | ❌ Pas de fuite — accès table complet par construction |
+| 03 | [Clangover — carte opt-level](attacks/03-clangover/) | Kyber / ML-KEM (`poly_compress`) | Désassemblage statique | ❌ Pas de fuite ≥ `-O1` (historique ; vrai Clangover → #09) |
+| 04 | [Oracle PC de Ravi](attacks/04-ravi-pc-oracle-kyber/) | Branche FO Kyber512 | Timing (t-test de Welch, n=20 000) | ❌ Pas d'oracle au timing |
+| 05 | [DVFS façon Hertzbleed](attacks/05-hertzbleed/) | Canal fréquentiel Pi 5 | Micro-architectural | ❌ Pas de canal — DVFS bimodal sur Pi 5 |
+| 06 | [**CPA sur ML-KEM pair-pointwise**](attacks/06-mlkem-cpa-pairpointwise/) | ML-KEM-768 (PQClean ref) | Consommation (CPA) | ✅ **Récupération clé complète avec 12 traces** |
+| 08 | [**Maillet HQC non-SIMD**](attacks/08-maillet-hqc-non-simd/) | HQC référence (non-SIMD) | Consommation (profilée) | ✅ **Récupération clé, ×64 vs force brute** |
+| 09 | [Clangover `poly_frommsg` (CVE-2024-37880)](attacks/09-clangover-poly-frommsg-aarch64/) | Kyber ref | Désasm statique + timing | ❌ AArch64 · ✅ x86_64 (contrôle cross-arch) |
+| 10 | [ML-DSA Decompose UDIV (CVE-2026-22705)](attacks/10-mldsa-decompose-udiv-aarch64/) | RustCrypto `ml-dsa` | Désasm + timing + µbench | ❌ Release · ⚠️ `-O0` debug uniquement |
+| 11 | [**Faute grafting-trees sur WOTS+ / SLH-DSA**](attacks/11-sphincs-grafting-fault-aarch64/) | SLH-DSA-SHAKE-128 | Faute (simulée) | ✅ **Contrefaçon universelle** (1re reproduction AArch64) |
+| 12 | [YODO HQC-128](attacks/12-yodo-hqc-aarch64/) | HQC-128 (PQClean vs v5.0.0) | Désasm statique (50 configs) | ❌ Pas de fuite sur AArch64 · correctif upstream partiel |
 
-**Légende** : ❌ négatif (non exploitable sur cette cible) · 🔬 en cours · ⏳ planifié · ✅ positif (fuite reproduite)
+**Légende** — ❌ négatif (non exploitable sur cette cible) · ⚠️ uniquement en build non livrable · ✅ positif (fuite / contrefaçon reproduite).
 
-> Chaque résultat négatif est documenté avec autant de soin qu'un résultat
-> positif — démontrer qu'une attaque ne fonctionne pas dans certaines
-> conditions est en soi une contribution scientifique.
+> Chaque résultat négatif est documenté avec la même rigueur qu'un résultat positif.
 
+## Plateformes & méthodologie
+
+Mewtwo couvre trois classes d'attaques, et la plate-forme diffère selon la classe —
+annoncé clairement pour ne rien sur-vendre :
+
+| Classe | Attaques | Plate-forme |
+|--------|----------|-------------|
+| Timing & micro-architectural | 01, 02, 03, 04, 05, 09, 10, 12 | **Raspberry Pi 5** (Cortex-A76, AArch64, Pi OS Bookworm) — matériel propre, PMU via `perf_event_open`, désassemblage `objdump` |
+| Analyse de consommation | 06, 08 | **Datasets publics de traces** (captures STM32 / ChipWhisperer des articles d'origine) — aucune capture privée |
+| Injection de fautes | 11 | **Faute simulée en logiciel** (Python pur) — pas de glitch physique |
+
+Conventions utilisées partout :
+
+- Seuil de fuite **TVLA** : `|t| ≥ 4,5`. Corrélation de **Pearson** pour la directionnalité.
+- Les balayages compilateur couvrent toute la matrice (gcc-12, clang-14/15/16/19 × `-O0…-O3,-Os`).
+- Les builds `-O0` / debug sont rapportés mais jamais présentés comme un résultat réel.
+- Toutes les cibles sont des implémentations historiques ou de référence explicitement
+  « recherche seulement » ; les commits figés sont dans chaque `data/manifest.yaml`.
+
+## Organisation du dépôt
+
+```
+Mewtwo/
+├── attacks/
+│   └── NN-nom/
+│       ├── README.md         # l'analyse : statut, méthode, résultats, références
+│       ├── lab_notes.md      # notes chronologiques, impasses, décisions
+│       ├── data/
+│       │   └── manifest.yaml # commits figés, provenance datasets, environnement
+│       ├── scripts/ | src/   # code d'analyse / de build
+│       ├── firmware/         # harnais, extraits de source, désassemblage
+│       └── results/          # matrices, figures, CSV/NPZ de synthèse
+├── common/pqlab/             # helpers Python partagés (metrics, traces, viz, capture)
+├── docker/                   # images analysis / firmware / simulation
+├── tests/                    # smoke tests CI du pipeline CPA
+├── LICENSE                   # code — MIT
+└── LICENSE-DATA              # données & docs — CC BY 4.0
+```
+
+Lire une attaque : commencer par son `README.md` (la conclusion et comment on y
+arrive), puis `lab_notes.md` pour l'histoire complète, enfin `data/manifest.yaml`
+pour reproduire sur le source figé exact.
+
+## Démarrage rapide
+
+```bash
+git clone https://github.com/seb30123/Mewtwo.git
+cd Mewtwo
+
+# Option A — environnement d'analyse conteneurisé (JupyterLab sur :8888)
+docker compose up analysis
+
+# Option B — Python local
+pip install -e ".[analysis,notebook]"
+pytest                      # exécute les smoke tests du pipeline CPA
+```
+
+Les helpers partagés sont dans le package `pqlab` (`common/pqlab/`) : `metrics`
+(SNR, t-test TVLA, CPA), `traces` (chargement de datasets), `viz` (tracés).
+
+## Portée & éthique
+
+Recherche défensive, centrée sur la reproductibilité. Chaque attaque reproduit un
+résultat **publiquement divulgué et évalué par les pairs** ; aucun 0-day n'est
+publié. Les expériences tournent uniquement sur le matériel propre de l'auteur, sur
+des datasets de recherche publics, ou en simulation — jamais contre des systèmes
+tiers ou de production. Toutes les bibliothèques ciblées ont depuis été corrigées ;
+les implémentations de référence sont utilisées comme artefacts de recherche, pas
+comme cibles de déploiement. Adapter ce code contre des systèmes que vous ne
+possédez pas ou n'êtes pas autorisé à tester est illégal dans la plupart des
+juridictions.
+
+## Licence
+
+- **Code** (C, Python, scripts, Docker) : [MIT](LICENSE)
+- **Données & documentation** (notes, résultats, désassemblage, figures) : [CC BY 4.0](LICENSE-DATA)
+
+Les articles tiers et implémentations upstream conservent leurs propres licences ;
+voir le manifeste de chaque attaque pour la provenance.
+
+## Auteur
+
+**seb30123** — recherche en canaux auxiliaires & cryptographie post-quantique.
+Signalements et rapports de reproduction bienvenus via le
+[tracker](https://github.com/seb30123/Mewtwo/issues).
