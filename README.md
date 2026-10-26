@@ -3,8 +3,6 @@
 > Reproducible catalogue of side-channel and fault-injection attacks on the NIST post-quantum cryptography standards.
 
 [![License: MIT](https://img.shields.io/badge/code-MIT-yellow.svg)](LICENSE)
-[![Data: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-blue.svg)](LICENSE-DATA)
-[![Platform: AArch64](https://img.shields.io/badge/platform-Cortex--A76%20%2F%20AArch64-success.svg)](#platforms--methodology)
 
 🇫🇷 [Lire en français](README.fr.md)
 
